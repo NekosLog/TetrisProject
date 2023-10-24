@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class ArrayController : MonoBehaviour
 {
-    private MinoData.MinoColor[,] _minoArray = new MinoData.MinoColor[20,10];
+    private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[20,10];
 
     private void DeleteLine(int Row)
     {
         for (int Column = 0; Column < _minoArray.GetLength(1); Column++)
         {
-            _minoArray[Row, Column] = MinoData.MinoColor.empty;
+            _minoArray[Row, Column] = MinoData.E_MinoColor.empty;
         }
     }
 
@@ -20,8 +20,8 @@ public class ArrayController : MonoBehaviour
         }
     }
 
-    private void SetMino(int[] position)
+    private void SetMino(MinoData.minoState minoState)
     {
-        
+        _minoArray[minoState.Row, minoState.Column] = minoState.minoColor;
     }
 }
