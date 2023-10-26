@@ -1,4 +1,4 @@
 interface IFGetMinoArray
 {
-    MinoData.E_MinoColor[,] _minoArray { get; }
+    MinoData.E_MinoColor[,] GetMinoArray();
 }
