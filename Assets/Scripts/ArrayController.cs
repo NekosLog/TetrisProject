@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +15,18 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 
     #endregion
 
+    private void DeleteArray()
+    {
+        while (DeleteLineList.Count > 0)
+        {
+            DeleteLine(DeleteLineList[0]);
+            DeleteLineList.RemoveAt(0);
+            if (DeleteLineList.Count == 0)
+            {
+                FallArray();
+            }
+        }
+    }
 
     private void DeleteLine(int row)
     {
@@ -24,7 +36,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
         }
         for (int addPoint = row; addPoint < _minoArray.GetLength(0); addPoint++)
         {
-            _fallValueArray[addPoint] += 1;
+            _fallValueArray[addPoint]++;
         }
         _deleteLineCounter++;
     }
@@ -34,18 +46,25 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
         int row = 1;
         foreach (int fallValue in _fallValueArray)
         {
-
+            if (fallValue > 0)
+            {
+                FallLine(row, fallValue);
+            }
+            row++;
         }
+        _fallValueArray = _fallValueArray.Select(x => 0).ToArray();
     }
 
     private void FallLine(int row, int fallValue)
     {
-        int fallPosition = row - fallValue;
+        int landingRow = row - fallValue;
         for(int column = 0; column < _minoArray.GetLength(1); column++)
         {
-            // ‚Å‚«‚ê‚Îempty”»’è‚µ‚½‚¢
-            // —Ž‚Æ‚·
-            // Á‚·
+            if(_minoArray[row,column] != MinoData.E_MinoColor.empty)
+            {
+                _minoArray[landingRow, column] = _minoArray[row, column];
+                _minoArray[row, column] = MinoData.E_MinoColor.empty;
+            }
         }
     }
 
@@ -61,6 +80,20 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
     {
         _minoArray[minoState.Row, minoState.Column] = minoState.minoColor;
     }
+
+    private void CheckArray()
+    {
+        while (DropedRowList.Count > 0)
+        {
+            CheckLine(DropedRowList[0]);
+            DropedRowList.RemoveAt(0);
+            if(DropedRowList.Count == 0)
+            {
+                DeleteArray();
+            }
+        }
+    }
+
     private void CheckLine(int row)
     {
         for (int Column = 0; Column < _minoArray.GetLength(1); Column++)
@@ -86,22 +119,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
             }
         }
 
-        while(DropedRowList.Count != 0)
-        {
-            CheckLine(DropedRowList[0]);
-            DropedRowList.RemoveAt(0);
-        }
-
-        while(DeleteLineList.Count != 0)
-        {
-            DeleteLine(DeleteLineList[0]);
-            DeleteLineList.RemoveAt(0);
-        }
-
-        if ()
-        {
-
-        }
+        CheckArray();
     }
 
     public MinoData.E_MinoColor[,] GetMinoArray()
