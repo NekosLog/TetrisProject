@@ -2,15 +2,23 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private static int _inputValue_Right;
+    private delegate InputRightDown();
+    private delegate InputRightHold();
 
-    private static int _inputValue_Left;
+    private delegate InputLeftDown();
+    private delegate InputLeftHold();
 
-    private static int _inputValue_Down;
+    private delegate InputUpDown();
+    private delegate InputUpHold();
 
-    private static int _inputValue_Up;
+    private delegate InputDownDown();
+    private delegate InputDownHold();
 
-    private static int _inputValue_Dicision;
+    private delegate InputDecisionDown();
+    private delegate InputDecisionHold();
 
-    private static int _inputValue_Cancel;
+    private delegate InputCancelDown();
+    private delegate InputCancelHold();
+
+
 }
