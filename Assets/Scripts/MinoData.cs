@@ -11,9 +11,9 @@ public class MinoData
             this.minoColor = minoColor;
         }
 
-        public int Row { get; }
-        public int Column { get; }
-        public E_MinoColor minoColor { get; }
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public E_MinoColor minoColor { get; set; }
     }
 
 
