@@ -1,5 +1,5 @@
 using UnityEngine;
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour, IFSetInputEvent
 {
     public delegate void InputEventHandler();
 
@@ -83,5 +83,35 @@ public class InputManager : MonoBehaviour
         {
             InputHoldCancel();
         }
+    }
+
+    public void IFSetInputEvent.SetHoldRight(void SetEvent)
+    {
+        InputHoldRight = SetEvent;
+    }
+
+    public void IFSetInputEvent.SetHoldLeft(void SetEvent)
+    {
+        InputHoldLeft = SetEvent;
+    }
+
+    public void IFSetInputEvent.SetDownUp(void SetEvent)
+    {
+        InputDownUp = SetEvent;
+    }
+
+    public void IFSetInputEvent.SetHoldDown(void SetEvent)
+    {
+        InputHoldDown = SetEvent;
+    }
+
+    public void IFSetInputEvent.SetDownDecision(void SetEvent)
+    {
+        InputDownDecision = SetEvent;
+    }
+
+    public void IFSetInputEvent.SetDownCancel(void SetEvent)
+    {
+        InputDownCancel = SetEvent;
     }
 }

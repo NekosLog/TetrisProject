@@ -1,17 +1,17 @@
 using UnityEngine;
 public class StateManager:MonoBehaviour
 {
-    private InputManager _inputManager = default;
+    private IFSetInputEvent _iSetInputEvent = default;
 
-    private IFInputMainGame _inputMainGame = default;
+    private IFInputMainGame _iInputMainGame = default;
 
-    private IFInputTitleMenu _inputTitleMenu = default;
+    private IFInputTitleMenu _iInputTitleMenu = default;
 
-    private IFInputInGameMenu _inputInGameMenu = default;
+    private IFInputInGameMenu _iInputInGameMenu = default;
 
-    private IFInputResultMenu _inputResultMenu = default;
+    private IFInputResultMenu _iInputResultMenu = default;
 
-    private IFInputOption _inputOption = default;
+    private IFInputOption _iInputOption = default;
 
     public enum InputState 
     {
@@ -23,6 +23,16 @@ public class StateManager:MonoBehaviour
     }
 
     private InputState _nowInputState = InputState.MainGame;
+
+    private void Awake()
+    {
+        _iSetInputEvent = GameObject.FindWithTag("GameManager").GetComponent<IFSetInputEvent>();
+        _iInputMainGame = GameObject.FindWithTag("GameManager").GetComponent<IFInputMainGame>();
+        _iInputTitleMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputTitleMenu>();
+        _iInputInGameMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputInGameMenu>();
+        _iInputResultMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputResultMenu>();
+        _iInputOption = GameObject.FindWithTag("GameManager").GetComponent<IFInputOption>();
+    }
 
     private void Start()
     {
@@ -89,6 +99,11 @@ public class StateManager:MonoBehaviour
 
     private void SetInputMainGame()
     {
-        _inputManager.
+        _iSetInputEvent.SetHoldRight(_iInputMainGame.RightKeyHold);
+        _iSetInputEvent.SetHoldLeft(_iInputMainGame.LeftKeyHold);
+        _iSetInputEvent.SetDownUp(_iInputMainGame.UpKeyDown);
+        _iSetInputEvent.SetHoldDown(_iInputMainGame.DownKeyHold);
+        _iSetInputEvent.SetDownDecision(_iInputMainGame.DecisionKeyDown);
+        _iSetInputEvent.SetDownUp(_iInputMainGame.CancelKeyDown);
     }
 }
