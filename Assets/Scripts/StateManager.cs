@@ -1,4 +1,5 @@
-public class StateManager
+using UnityEngine;
+public class StateManager:MonoBehaviour
 {
     private InputManager _inputManager = default;
 
@@ -21,7 +22,12 @@ public class StateManager
         OptionMenu   = 4
     }
 
-    private InputState _nowInputState = default;
+    private InputState _nowInputState = InputState.MainGame;
+
+    private void Start()
+    {
+        ChengeInputState(InputState.MainGame);
+    }
 
     public void ChengeInputState(InputState inputState)
     {
@@ -29,7 +35,7 @@ public class StateManager
         {
             case InputState.MainGame:
                 ExitInputState(_nowInputState);
-
+                SetInputMainGame();
                 break;
 
             case InputState.TitleMenu:
@@ -83,7 +89,6 @@ public class StateManager
 
     private void SetInputMainGame()
     {
-        _inputManager.InputDownEvent(this, InputEventArgs.E_InputKey.Right) = _inputMainGame.;
-        _inputManager.InputHoldEvent = ;
+        _inputManager.
     }
 }
