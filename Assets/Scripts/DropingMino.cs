@@ -22,6 +22,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
     private float _leftInterval = default;
     private float _downInterval = default;
 
+    private enum E_RotationVector { right = 0, left = 1 }
+    private E_RotationVector _rotationRight = E_RotationVector.right;
+    private E_RotationVector _rotationLeft = E_RotationVector.left;
+
     private readonly Vector2 MOVE_RIGHT = Vector2.right;
     private readonly Vector2 MOVE_LEFT = Vector2.left;
     private readonly Vector2 MOVE_DOWN = Vector2.down;
@@ -111,6 +115,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
                 {
                     _dropingMinoOrigin -= MOVE_DOWN;
                     _iLandingMinos.LandingMinos(LandingMinoList());
+                    ReFresh();
                 }
             }
         }
@@ -127,6 +132,11 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
             {
                 _dropingMinoOrigin -= MOVE_RIGHT;
             }
+
+            while (CheckStack())
+            {
+                PushUp();
+            }
         }
     }
 
@@ -139,6 +149,11 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
             if (CheckStack())
             {
                 _dropingMinoOrigin -= MOVE_LEFT;
+            }
+
+            while (CheckStack())
+            {
+                PushUp();
             }
         }
     }
@@ -159,6 +174,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
             {
                 _dropingMinoOrigin -= MOVE_DOWN;
                 _iLandingMinos.LandingMinos(LandingMinoList());
+                ReFresh();
             }
         }
     }
@@ -167,12 +183,14 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
     {
         _beforeRotate = _nowRotate;
         _nowRotate -= ROTATE_VALUE;
+        RotationMino(_rotationLeft);
     }
 
     public void CancelKeyDown()
     {
         _beforeRotate = _nowRotate;
         _nowRotate += ROTATE_VALUE;
+        RotationMino(_rotationRight);
     }
 
     #endregion
@@ -269,5 +287,32 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
         _downInterval = default;
         _minoFallTime = default;
         RotateReSet();
+    }
+
+    private void RotationMino(E_RotationVector rotationVector)
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            float posX = _dropingminoPositions[i, 0];
+            float posY = _dropingminoPositions[i, 1];
+
+            switch (rotationVector)
+            {
+                case E_RotationVector.right:
+                        _dropingminoPositions[i, 0] = posY;
+                        _dropingminoPositions[i, 1] = -posX;
+                    break;
+
+                case E_RotationVector.left:
+                        _dropingminoPositions[i, 0] = -posY;
+                        _dropingminoPositions[i, 1] = posX;
+                    break;
+            }
+        }
+    }
+
+    private void PushUp()
+    {
+        _dropingMinoOrigin += Vector2.up;
     }
 }
