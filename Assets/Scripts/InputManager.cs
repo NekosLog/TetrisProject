@@ -1,102 +1,87 @@
-using System;
 using UnityEngine;
 public class InputManager : MonoBehaviour
 {
-    public delegate void InputEventHandler(object sender, EventArgs e);
+    public delegate void InputEventHandler();
 
-    public InputEventHandler InputDownEvent;
+    public InputEventHandler InputDownRight;
+    public InputEventHandler InputDownLeft;
+    public InputEventHandler InputDownUp;
+    public InputEventHandler InputDownDown;
+    public InputEventHandler InputDownDecision;
+    public InputEventHandler InputDownCancel;
 
-    public InputEventHandler InputHoldEvent;
-
-    InputEventArgs input_Right = new InputEventArgs(InputEventArgs.E_InputKey.Right);
-
-    InputEventArgs input_Left = new InputEventArgs(InputEventArgs.E_InputKey.Left);
-
-    InputEventArgs input_Up = new InputEventArgs(InputEventArgs.E_InputKey.Up);
-
-    InputEventArgs input_Down = new InputEventArgs(InputEventArgs.E_InputKey.Down);
-
-    InputEventArgs input_Decision = new InputEventArgs(InputEventArgs.E_InputKey.Decision);
-
-    InputEventArgs input_Cancel = new InputEventArgs(InputEventArgs.E_InputKey.Cancel);
-
+    public InputEventHandler InputHoldRight;
+    public InputEventHandler InputHoldLeft;
+    public InputEventHandler InputHoldUp;
+    public InputEventHandler InputHoldDown;
+    public InputEventHandler InputHoldDecision;
+    public InputEventHandler InputHoldCancel;
 
     private void Update()
     {
         // 右方向の入力
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            OnInputDownEvent(input_Right);
+            InputDownRight();
         }
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            OnInputHoldEvent(input_Right);
+            InputHoldRight();
         }
 
 
         // 左方向の入力
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            OnInputDownEvent(input_Left);
+            InputDownLeft();
         }
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            OnInputHoldEvent(input_Left);
+            InputHoldLeft();
         }
 
 
         // 上方向の入力
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            OnInputDownEvent(input_Up);
+            InputDownUp();
         }
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            OnInputHoldEvent(input_Up);
+            InputHoldUp();
         }
 
 
         // 下方向の入力
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            OnInputDownEvent(input_Down);
+            InputDownDown();
         }
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
-            OnInputHoldEvent(input_Down);
+            InputHoldDown();
         }
 
 
         // 決定ボタンの入力
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Z))
         {
-            OnInputDownEvent(input_Decision);
+            InputDownDecision();
         }
         if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Z))
         {
-            OnInputHoldEvent(input_Decision);
+            InputHoldDecision();
         }
 
 
         // キャンセルボタンの入力
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X))
         {
-            OnInputDownEvent(input_Cancel);
+            InputDownCancel();
         }
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.X))
         {
-            OnInputHoldEvent(input_Cancel);
+            InputHoldCancel();
         }
-    }
-
-
-    private void OnInputDownEvent(InputEventArgs inputType)
-    {
-        InputDownEvent?.Invoke(this, inputType);
-    }
-
-    private void OnInputHoldEvent(InputEventArgs inputType)
-    {
-        InputDownEvent?.Invoke(this, inputType);
     }
 }

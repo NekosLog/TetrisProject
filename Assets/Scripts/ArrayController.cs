@@ -5,15 +5,20 @@ using UnityEngine;
 public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 {
     #region ïœêî
+    private IFStayMinoLooksUpdata _iStayMinoLooksUpdata;
 
     private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[20, 10];
     private List<int> DropedRowList;
     private List<int> DeleteLineList;
-    private bool _doesDelete = false;
     private int _deleteLineCounter = default;
     private int[] _fallValueArray = new int[19];
 
     #endregion
+
+    private void Awake()
+    {
+        _iStayMinoLooksUpdata = GameObject.FindWithTag("GameManager").GetComponent<IFStayMinoLooksUpdata>();
+    }
 
     private void DeleteArray()
     {
@@ -103,7 +108,6 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
                 return;
             }
             DeleteLineList.Add(row);
-            _doesDelete = true;
         }
     }
 
@@ -120,6 +124,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
         }
 
         CheckArray();
+        _iStayMinoLooksUpdata.StayMinoLooksUpdata();
     }
 
     public MinoData.E_MinoColor[,] GetMinoArray()
