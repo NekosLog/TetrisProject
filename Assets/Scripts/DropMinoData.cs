@@ -1,5 +1,6 @@
 using System;
-public class DropMinoData : IFGetDropMinoData, IFDropMino
+using UnityEngine;
+public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
 {
     private MinoData.E_MinoColor _nextMino = MinoData.E_MinoColor.red;
 
@@ -7,24 +8,24 @@ public class DropMinoData : IFGetDropMinoData, IFDropMino
 
     private MinoData.E_MinoColor _thirdMino = MinoData.E_MinoColor.green;
 
-    Random random = new Random();
+    System.Random random = new System.Random();
 
-    public MinoData.E_MinoColor GetNextMino()
+    MinoData.E_MinoColor IFGetDropMinoData.GetNextMino()
     {
         return _nextMino;
     }
 
-    public MinoData.E_MinoColor GetSecondMino()
+    MinoData.E_MinoColor IFGetDropMinoData.GetSecondMino()
     {
         return _secondMino;
     }
 
-    public MinoData.E_MinoColor GetThirdMino()
+    MinoData.E_MinoColor IFGetDropMinoData.GetThirdMino()
     {
         return _thirdMino;
     }
 
-    public MinoData.E_MinoColor GetDropMino()
+    MinoData.E_MinoColor IFDropMino.GetDropMino()
     {
         MinoData.E_MinoColor dropMino = _nextMino;
         PrepareMino();

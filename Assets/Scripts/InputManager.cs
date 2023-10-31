@@ -1,6 +1,8 @@
 using UnityEngine;
-public class InputManager : MonoBehaviour, IFSetInputEvent
+public class InputManager : MonoBehaviour
 {
+    private DropingMino drop;
+
     public delegate void InputEventHandler();
 
     public InputEventHandler InputDownRight;
@@ -17,101 +19,76 @@ public class InputManager : MonoBehaviour, IFSetInputEvent
     public InputEventHandler InputHoldDecision;
     public InputEventHandler InputHoldCancel;
 
+    private void Awake()
+    {
+        drop = GameObject.FindWithTag("GameManager").GetComponent<DropingMino>();
+    }
+
     private void Update()
     {
         // 右方向の入力
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            InputDownRight();
+            InputDownRight?.Invoke();
         }
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            InputHoldRight();
+            InputHoldRight?.Invoke();
         }
 
 
         // 左方向の入力
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            InputDownLeft();
+            InputDownLeft?.Invoke();
         }
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            InputHoldLeft();
+            InputHoldLeft?.Invoke();
         }
 
 
         // 上方向の入力
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            InputDownUp();
+            InputDownUp?.Invoke();
         }
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            InputHoldUp();
+            InputHoldUp?.Invoke();
         }
 
 
         // 下方向の入力
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            InputDownDown();
+            InputDownDown?.Invoke();
         }
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
-            InputHoldDown();
+            InputHoldDown?.Invoke();
         }
 
 
         // 決定ボタンの入力
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Z))
         {
-            InputDownDecision();
+            InputDownDecision?.Invoke();
         }
         if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Z))
         {
-            InputHoldDecision();
+            InputHoldDecision?.Invoke();
         }
 
 
         // キャンセルボタンの入力
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X))
         {
-            InputDownCancel();
+            InputDownCancel?.Invoke();
         }
         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.X))
         {
-            InputHoldCancel();
+            InputHoldCancel?.Invoke();
         }
-    }
-
-    public void IFSetInputEvent.SetHoldRight(void SetEvent)
-    {
-        InputHoldRight = SetEvent;
-    }
-
-    public void IFSetInputEvent.SetHoldLeft(void SetEvent)
-    {
-        InputHoldLeft = SetEvent;
-    }
-
-    public void IFSetInputEvent.SetDownUp(void SetEvent)
-    {
-        InputDownUp = SetEvent;
-    }
-
-    public void IFSetInputEvent.SetHoldDown(void SetEvent)
-    {
-        InputHoldDown = SetEvent;
-    }
-
-    public void IFSetInputEvent.SetDownDecision(void SetEvent)
-    {
-        InputDownDecision = SetEvent;
-    }
-
-    public void IFSetInputEvent.SetDownCancel(void SetEvent)
-    {
-        InputDownCancel = SetEvent;
     }
 }
