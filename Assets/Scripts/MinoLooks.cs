@@ -58,7 +58,7 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
             ChengeBlockColor(_minoBlockArray[dropPosition[0], dropPosition[1]], minoColor);
         }
     }
-
+    
     public void DeleteLastDrop()
     {
         if (_lastSetDropPosition != null)
@@ -83,7 +83,7 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
                 }
             }
         }
-        _lastSetDropPosition = null;
+        _lastSetDropPosition = new int[4,2];
     }
 
     private void ChengeBlockColor(GameObject block,MinoData.E_MinoColor minoColor)

@@ -10,7 +10,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
     private IFLandingMinos _iLandingMinos;
     private IFDropMinoLooksUpdata _iDropMinoLooksUpdata;
 
-    private MinoData.E_MinoColor _dropingMinoColor;
+    private MinoData.E_MinoColor _dropingMinoColor = MinoData.E_MinoColor.empty;
     private Vector2 _dropingMinoOrigin;
     private float[,] _dropingminoPositions = new float[4,2];
     private List<MinoData.minoState> _landingMinoList;
@@ -36,6 +36,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
     private readonly Vector2 ORIGIN_NORMAL = new Vector2(4f, 20f);
 
     private const float ROTATE_VALUE = 90;
+
+    private const int MAX_ROW = 9;
+    private const int MIN_ROW = 0;
+    private const int MIN_COLUMN = 0;
 
 
     private readonly float[,] INITIAL_POSITIONS_CYAN = 
@@ -117,7 +121,12 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             _leftInterval -= Time.deltaTime;
         }
 
-        if(_dropingMinoColor != MinoData.E_MinoColor.empty)
+        if (_downInterval > 0)
+        {
+            _downInterval -= Time.deltaTime;
+        }
+
+        if (_dropingMinoColor != MinoData.E_MinoColor.empty)
         {
             _minoFallTime += Time.deltaTime;
             if(_minoFallTime > _minoFallInterval)
@@ -136,10 +145,15 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            DropStart();
+        }
     }
 
     #region InputŠÖŒW
-    public void RightKeyHold()
+    public void InputHoldRight()
     {
         if(_rightInterval <= 0)
         {
@@ -153,7 +167,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         }
     }
 
-    public void LeftKeyHold()
+    public void InputHoldLeft()
     {
         if (_leftInterval <= 0)
         {
@@ -168,12 +182,12 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         }
     }
 
-    public void UpKeyDown()
+    public void InputDownUp()
     {
 
     }
 
-    public void DownKeyHold()
+    public void InputHoldDown()
     {
         if(_downInterval <= 0)
         {
@@ -193,18 +207,20 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         }
     }
 
-    public void DecisionKeyDown()
+    public void InputDownDecision()
     {
         _beforeRotate = _nowRotate;
         _nowRotate -= ROTATE_VALUE;
         RotationMino(_rotationLeft);
+
         while (CheckStack())
         {
             PushUp();
         }
+        _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
     }
 
-    public void CancelKeyDown()
+    public void InputDownCancel()
     {
         _beforeRotate = _nowRotate;
         _nowRotate += ROTATE_VALUE;
@@ -213,12 +229,14 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         {
             PushUp();
         }
+        _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
     }
 
     #endregion
 
     public void DropStart()
     {
+        print(_iDropMino);
         _dropingMinoColor = _iDropMino.GetDropMino();
 
         switch (_dropingMinoColor)
@@ -274,9 +292,9 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
 
     private bool CheckStack()
     {
-        for(int position_x = 0; position_x < 4; position_x++)
+        for(int positionX = 0; positionX < 4; positionX++)
         {
-            if(_iGetMinoArray.GetMinoArray()[(int)(_dropingMinoOrigin.x + _dropingminoPositions[position_x,0]),(int)(_dropingMinoOrigin.y + _dropingminoPositions[position_x,1])] != MinoData.E_MinoColor.empty)
+            if(CheckOut(positionX) ||_iGetMinoArray.GetMinoArray()[(GetDropingMinoColumn(positionX)),(GetDropingMinoRow(positionX))] != MinoData.E_MinoColor.empty)
             {
                 return true;
             }
@@ -284,18 +302,30 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         return false;
     }
 
+    private bool CheckOut(int positionX)
+    {
+        if (GetDropingMinoRow(positionX) < MIN_COLUMN || GetDropingMinoRow(positionX) > MAX_ROW || GetDropingMinoColumn(positionX) < MIN_COLUMN)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     private List<MinoData.minoState> LandingMinoList()
     {
-        List<MinoData.minoState> list = default;
+        List<MinoData.minoState> list = new List<MinoData.minoState>();
         MinoData.minoState mino = default;
 
         mino.minoColor = _dropingMinoColor;
         for (int i = 0; i < 4; i++)
         {
-            mino.Row = GetDropingMinoRow(i);
-            mino.Column = GetDropingMinoColumn(i);
-            list.Add(mino);
+            mino.Row = GetDropingMinoColumn(i);
+            mino.Column = GetDropingMinoRow(i);
+            list.Insert(0,mino);
         }
 
         return list;
@@ -340,7 +370,8 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
 
     private int GetDropingMinoRow(int minoNumber)
     {
-        return (int)(_dropingMinoOrigin.x + _dropingminoPositions[minoNumber,0]);
+        int minoRow = (int)(_dropingMinoOrigin.x + _dropingminoPositions[minoNumber, 0]);
+        return (int)(minoRow) ;
     }
 
     private int GetDropingMinoColumn(int minoNumber)
@@ -350,7 +381,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
 
     public int[] GetDropingMinoPosition(int minoNumber)
     {
-        return new int[]{ GetDropingMinoRow(minoNumber),GetDropingMinoColumn(minoNumber) };
+        return new int[]{GetDropingMinoColumn(minoNumber), GetDropingMinoRow(minoNumber) };
     }
 
     public MinoData.E_MinoColor GetDropingMinoColor()

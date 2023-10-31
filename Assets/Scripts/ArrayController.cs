@@ -7,17 +7,19 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
     #region ïœêî
     private IFStayMinoLooksUpdata _iStayMinoLooksUpdata;
 
-    private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[20, 10];
-    private List<int> DropedRowList;
-    private List<int> DeleteLineList;
+    private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[22, 10];
+    private List<int> DropedRowList = new List<int>();
+    private List<int> DeleteLineList = new List<int>();
     private int _deleteLineCounter = default;
-    private int[] _fallValueArray = new int[19];
+    private int[] _fallValueArray = new int[21];
 
     #endregion
 
     private void Awake()
     {
         _iStayMinoLooksUpdata = GameObject.FindWithTag("GameManager").GetComponent<IFStayMinoLooksUpdata>();
+        ClearArray();
+        _iStayMinoLooksUpdata.StayMinoLooksUpdata();
     }
 
     private void DeleteArray()
@@ -39,7 +41,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
         {
             _minoArray[row, column] = MinoData.E_MinoColor.empty;
         }
-        for (int addPoint = row; addPoint < _minoArray.GetLength(0); addPoint++)
+        for (int addPoint = row; addPoint < _minoArray.GetLength(0) - 1; addPoint++)
         {
             _fallValueArray[addPoint]++;
         }
@@ -77,7 +79,10 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
     {
         for (int row = 0; row < _minoArray.GetLength(0); row++)
         {
-            DeleteLine(row);
+            for (int column = 0; column < _minoArray.GetLength(1); column++)
+            {
+                _minoArray[row, column] = MinoData.E_MinoColor.empty;
+            }
         }
     }
 
@@ -107,8 +112,8 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
             {
                 return;
             }
-            DeleteLineList.Add(row);
         }
+        DeleteLineList.Add(row);
     }
 
     public void LandingMinos(List<MinoData.minoState> dropingMinos)
@@ -119,7 +124,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
             SetMino(Mino);
             if (!DropedRowList.Contains(Mino.Row))
             {
-                DropedRowList.Insert(0,Mino.Row);
+                DropedRowList.Add(Mino.Row);
             }
         }
 

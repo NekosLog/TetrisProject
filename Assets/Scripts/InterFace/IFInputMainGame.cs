@@ -1,9 +1,9 @@
 interface IFInputMainGame
 {
-    void RightKeyHold();
-    void LeftKeyHold();
-    void UpKeyDown();
-    void DownKeyHold();
-    void DecisionKeyDown();
-    void CancelKeyDown();
+    void InputHoldRight();
+    void InputHoldLeft();
+    void InputDownUp();
+    void InputHoldDown();
+    void InputDownDecision();
+    void InputDownCancel();
 }
