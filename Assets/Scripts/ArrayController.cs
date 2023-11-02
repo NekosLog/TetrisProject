@@ -88,7 +88,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 
     private void SetMino(MinoData.minoState minoState)
     {
-        _minoArray[minoState.Row, minoState.Column] = minoState.minoColor;
+        _minoArray[minoState.Column, minoState.Row] = minoState.minoColor;
     }
 
     private void CheckArray()

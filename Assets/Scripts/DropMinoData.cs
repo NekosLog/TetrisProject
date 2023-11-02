@@ -25,7 +25,7 @@ public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
         return _thirdMino;
     }
 
-    MinoData.E_MinoColor IFDropMino.GetDropMino()
+    public MinoData.E_MinoColor GetDropMino()
     {
         MinoData.E_MinoColor dropMino = _nextMino;
         PrepareMino();
@@ -36,6 +36,6 @@ public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
     {
         _nextMino = _secondMino;
         _secondMino = _thirdMino;
-        _thirdMino = (MinoData.E_MinoColor)random.Next(0,Enum.GetValues(typeof(MinoData.E_MinoColor)).Length);
+        _thirdMino = (MinoData.E_MinoColor)random.Next(0,Enum.GetValues(typeof(MinoData.E_MinoColor)).Length - 1);
     }
 }
