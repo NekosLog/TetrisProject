@@ -1,6 +1,8 @@
 interface IFDropMinoLooksUpdata
 {
-    void DropMinoLooksUpdata(MinoData.E_MinoColor minoColor);
+    void DropMinoLooksUpdata();
 
     void DeleteLastDrop();
+
+    void SetDropingMinoColor(MinoData.E_MinoColor minoColor);
 }

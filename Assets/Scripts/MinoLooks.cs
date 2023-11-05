@@ -30,6 +30,8 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     private readonly Color _orange = new Color(1,1,0);
     private readonly Color _blue = Color.blue;
 
+    private MinoData.E_MinoColor _dropingMinoColor = MinoData.E_MinoColor.empty;
+
     private void Awake()
     {
         _iDropMinoLooksData = GameObject.FindWithTag("GameManager").GetComponent<IFDropMinoLooksData>();
@@ -47,7 +49,7 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         }
     }
 
-    public void DropMinoLooksUpdata(MinoData.E_MinoColor minoColor)
+    public void DropMinoLooksUpdata()
     {
         DeleteLastDrop();
         for (int i = 0; i < MINO_MAXVALUE; i++)
@@ -55,10 +57,15 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
             int[] dropPosition = _iDropMinoLooksData.GetDropingMinoPosition(i);
             _lastSetDropPosition[i,0] = dropPosition[0];
             _lastSetDropPosition[i,1] = dropPosition[1];
-            ChengeBlockColor(_minoBlockArray[dropPosition[0], dropPosition[1]], minoColor);
+            ChengeBlockColor(_minoBlockArray[dropPosition[0], dropPosition[1]], _dropingMinoColor) ;
         }
     }
-    
+
+    public void SetDropingMinoColor(MinoData.E_MinoColor minoColor)
+    {
+        _dropingMinoColor = minoColor;
+    }
+
     public void DeleteLastDrop()
     {
         if (_lastSetDropPosition != null)
