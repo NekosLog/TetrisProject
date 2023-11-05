@@ -135,7 +135,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
                 if (CanMove(down))
                 {
                     _dropingMinoOrigin = MoveDown(_dropingMinoOrigin);
-                    _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                    _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 }
                 else
                 {
@@ -160,7 +160,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             {
                 _dropingMinoOrigin = MoveRight(_dropingMinoOrigin);
                 _rightInterval = _iGetKeyInterval.MinoMoveInterval();
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
             }
         }
     }
@@ -174,7 +174,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
                 print("imo");
                 _dropingMinoOrigin = MoveLeft(_dropingMinoOrigin);
                 _leftInterval = _iGetKeyInterval.MinoMoveInterval();
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
             }
         }
     }
@@ -193,7 +193,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
                 _minoFallTime = 0f;
                 _dropingMinoOrigin = MoveDown(_dropingMinoOrigin);
                 _downInterval = _iGetKeyInterval.MinoMoveInterval();
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
             }
             else
             {
@@ -212,7 +212,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         {
             _nowRotate = nextRotate;
             _dropingminoPositions = nextPositions;
-            _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+            _iDropMinoLooksUpdata.DropMinoLooksUpdata();
         }
         else
         {
@@ -229,7 +229,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
         {
             _nowRotate = nextRotate;
             _dropingminoPositions = nextPositions;
-            _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+            _iDropMinoLooksUpdata.DropMinoLooksUpdata();
         }
         else
         {
@@ -255,7 +255,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             case MinoData.E_MinoColor.cyan:
                 _dropingMinoOrigin = ORIGIN_STRANGE;
                 _dropingminoPositions = INITIAL_POSITIONS_CYAN;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
 
@@ -263,7 +263,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             case MinoData.E_MinoColor.purple:
                 _dropingMinoOrigin = ORIGIN_NORMAL;
                 _dropingminoPositions = INITIAL_POSITIONS_PURPLE;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
 
@@ -271,7 +271,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             case MinoData.E_MinoColor.red:
                 _dropingMinoOrigin = ORIGIN_NORMAL;
                 _dropingminoPositions = INITIAL_POSITIONS_RED;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
 
@@ -279,7 +279,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             case MinoData.E_MinoColor.green:
                 _dropingMinoOrigin = ORIGIN_NORMAL;
                 _dropingminoPositions = INITIAL_POSITIONS_GREEN;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
 
@@ -287,7 +287,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             case MinoData.E_MinoColor.yellow:
                 _dropingMinoOrigin = ORIGIN_STRANGE;
                 _dropingminoPositions = INITIAL_POSITIONS_YELLOW;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
 
@@ -295,7 +295,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
             case MinoData.E_MinoColor.orange:
                 _dropingMinoOrigin = ORIGIN_NORMAL;
                 _dropingminoPositions = INITIAL_POSITIONS_ORANGE;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
 
@@ -304,7 +304,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropMinoLooksData
                 print(ORIGIN_NORMAL[0] + " , " + ORIGIN_NORMAL[1]);
                 _dropingMinoOrigin = ORIGIN_NORMAL;
                 _dropingminoPositions = INITIAL_POSITIONS_BLUE;
-                _iDropMinoLooksUpdata.DropMinoLooksUpdata(_dropingMinoColor);
+                _iDropMinoLooksUpdata.DropMinoLooksUpdata();
                 print("column = " + _dropingMinoOrigin[0] + "      row = " + _dropingMinoOrigin[1]);
                 break;
         }
