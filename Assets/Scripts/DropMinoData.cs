@@ -2,11 +2,15 @@ using System;
 using UnityEngine;
 public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
 {
+    static Vector2[] a = { new Vector2 { }, new Vector2 { } };
+
     private MinoData.E_MinoColor _nextMino = MinoData.E_MinoColor.red;
 
     private MinoData.E_MinoColor _secondMino = MinoData.E_MinoColor.blue;
 
     private MinoData.E_MinoColor _thirdMino = MinoData.E_MinoColor.green;
+
+    private MinoData.E_MinoColor _holdingMino = MinoData.E_MinoColor.empty;
 
     System.Random random = new System.Random();
 
@@ -27,9 +31,24 @@ public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
 
     public MinoData.E_MinoColor GetDropMino()
     {
-        MinoData.E_MinoColor dropMino = _nextMino;
+        MinoData.E_MinoColor returnMinoColor = _nextMino;
         PrepareMino();
-        return dropMino;
+        return returnMinoColor;
+    }
+
+    public MinoData.E_MinoColor ChangeHold(MinoData.E_MinoColor dropingMino)
+    {
+        MinoData.E_MinoColor returnMinoColor;
+        if (_holdingMino != MinoData.E_MinoColor.empty)
+        {
+            returnMinoColor = _holdingMino;
+        }
+        else
+        {
+            returnMinoColor = GetDropMino();
+        }
+        _holdingMino = dropingMino;
+        return returnMinoColor;
     }
 
     private void PrepareMino()
