@@ -14,7 +14,13 @@ public class MinoData
         public int Row { get; set; }
         public int Column { get; set; }
         public E_MinoColor minoColor { get; set; }
+
+        public const int COLUMN = 0;
+
+        public const int ROW = 1;
     }
 
+    public const int COLUMN = 0;
 
+    public const int ROW = 1;
 }
