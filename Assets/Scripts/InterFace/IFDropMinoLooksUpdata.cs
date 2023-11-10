@@ -1,6 +1,6 @@
 interface IFDropMinoLooksUpdata
 {
-    void DropMinoLooksUpdata();
+    void DropMinoLooksUpdata(int[,] dropingMinoPosition);
 
     void DeleteLastDrop();
 

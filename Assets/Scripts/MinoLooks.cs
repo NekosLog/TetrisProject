@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpdata
 {
-    IFDropMinoLooksData _iDropMinoLooksData;
     IFGetMinoArray _iGetMinoArray;
 
     private const int ARRAY_ROW = 10;
@@ -34,7 +33,6 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
 
     private void Awake()
     {
-        _iDropMinoLooksData = GameObject.FindWithTag("GameManager").GetComponent<IFDropMinoLooksData>();
         _iGetMinoArray = GameObject.FindWithTag("GameManager").GetComponent<IFGetMinoArray>();
 
         Vector3 blockPosition = default;
@@ -49,15 +47,17 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         }
     }
 
-    public void DropMinoLooksUpdata()
+    public void DropMinoLooksUpdata(int[,] dropingMinoPosition)
     {
         DeleteLastDrop();
+        int[] dropPosition = new int[2];
         for (int i = 0; i < MINO_MAXVALUE; i++)
         {
-            int[] dropPosition = _iDropMinoLooksData.GetDropingMinoPosition(i);
-            _lastSetDropPosition[i,0] = dropPosition[0];
-            _lastSetDropPosition[i,1] = dropPosition[1];
-            ChengeBlockColor(_minoBlockArray[dropPosition[0], dropPosition[1]], _dropingMinoColor) ;
+            dropPosition[MinoData.COLUMN] = dropingMinoPosition[i, MinoData.COLUMN];
+            dropPosition[MinoData.ROW] = dropingMinoPosition[i, MinoData.ROW];
+            _lastSetDropPosition[i, MinoData.COLUMN] = dropPosition[MinoData.COLUMN];
+            _lastSetDropPosition[i, MinoData.ROW] = dropPosition[MinoData.ROW];
+            ChengeBlockColor(_minoBlockArray[dropPosition[MinoData.COLUMN], dropPosition[MinoData.ROW]], _dropingMinoColor) ;
         }
     }
 
@@ -72,7 +72,7 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         {
             for (int i = 0; i < MINO_MAXVALUE; i++)
             {
-                ChengeBlockColor(_minoBlockArray[_lastSetDropPosition[i, 0],_lastSetDropPosition[i, 1]], MinoData.E_MinoColor.empty);
+                ChengeBlockColor(_minoBlockArray[_lastSetDropPosition[i, MinoData.COLUMN],_lastSetDropPosition[i, MinoData.ROW]], MinoData.E_MinoColor.empty);
             }
         }
     }
