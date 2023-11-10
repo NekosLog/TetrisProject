@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
 public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpdata
@@ -15,7 +17,8 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
 
     private MinoData.E_MinoColor[,] _nowMinoColor = new MinoData.E_MinoColor[22, 10];
 
-    private int[,] _lastSetDropPosition = new int[4, 2];
+    private int[,] _nowDropingMinoPosition = new int[4, 2];
+    private int _dropingMinoPositionLength = _nowDropingMinoPosition.Length[0] * _nowDropingMinoPosition.Length[1];
 
     private float[] _positionHeight = { -11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10};
 
@@ -50,14 +53,10 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     public void DropMinoLooksUpdata(int[,] dropingMinoPosition)
     {
         DeleteLastDrop();
-        int[] dropPosition = new int[2];
+        Array.Copy(dropingMinoPosition,_nowDropingMinoPosition,_dropingMinoPositionLength)
         for (int i = 0; i < MINO_MAXVALUE; i++)
         {
-            dropPosition[MinoData.COLUMN] = dropingMinoPosition[i, MinoData.COLUMN];
-            dropPosition[MinoData.ROW] = dropingMinoPosition[i, MinoData.ROW];
-            _lastSetDropPosition[i, MinoData.COLUMN] = dropPosition[MinoData.COLUMN];
-            _lastSetDropPosition[i, MinoData.ROW] = dropPosition[MinoData.ROW];
-            ChengeBlockColor(_minoBlockArray[dropPosition[MinoData.COLUMN], dropPosition[MinoData.ROW]], _dropingMinoColor) ;
+            ChengeBlockColor(_minoBlockArray[_nowDropingMinoPosition[i,MinoData.COLUMN], _nowDropingMinoPosition[i,MinoData.ROW]], _dropingMinoColor) ;
         }
     }
 
@@ -68,12 +67,16 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
 
     public void DeleteLastDrop()
     {
-        if (_lastSetDropPosition != null)
+        if (_nowDropingMinoPosition.All(x => x != 0))
         {
             for (int i = 0; i < MINO_MAXVALUE; i++)
             {
-                ChengeBlockColor(_minoBlockArray[_lastSetDropPosition[i, MinoData.COLUMN],_lastSetDropPosition[i, MinoData.ROW]], MinoData.E_MinoColor.empty);
+                ChengeBlockColor(_minoBlockArray[_nowDropingMinoPosition[i, MinoData.COLUMN],_nowDropingMinoPosition[i, MinoData.ROW]], MinoData.E_MinoColor.empty);
             }
+        }
+        else
+        {
+            return;
         }
     }
 
@@ -90,7 +93,7 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
                 }
             }
         }
-        _lastSetDropPosition = new int[4,2];
+        _nowDropingMinoPosition = _nowDropingMinoPosition.Select(x => 0).ToArray();
     }
 
     private void ChengeBlockColor(GameObject block,MinoData.E_MinoColor minoColor)
