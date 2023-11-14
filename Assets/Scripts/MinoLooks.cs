@@ -8,20 +8,23 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
 {
     #region 変数域
 
+    #region クラス型変数
+    // インターフェースのインスタンス用変数
+    private IFGetMinoArray _iGetMinoArray = default;
+    #endregion
+
     [SerializeField, Tooltip("ミノの表示用オブジェクト")]
     private GameObject _minoBlockObject = default;
 
-    // インターフェースのインスタンス用変数
-    IFGetMinoArray _iGetMinoArray = default;
 
     // ミノの列数
-    private const int ARRAY_ROW = 10;
+    private const int FIELD_ROW = 10;
 
     // ミノの行数
-    private const int ARRAY_COLUMN = 22;
+    private const int FIELD_COLUMN = 22;
 
     // 落ちてくるミノの個数
-    private const int MINO_MAXVALUE = 4;
+    private const int MINO_MAX_VALUE = 4;
 
     // 落下中のミノが存在しないときに代入する値
     private const int ENPTY_VALUE = -99;
@@ -37,6 +40,12 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
 
     // 現在落下中のミノの位置
     private int[,] _nowDropingMinoPosition = new int[4, 2];
+
+    // ミノの位置を設定する原点の位置
+    private Vector2 _positionOrigin = new Vector2(-5f,-11f);
+
+    // ミノの設置間隔
+    private const float POSITION_INTERVAL = 1f;
 
     // ミノの各行の位置　高さを指定するために使用
     private float[] _positionHeight = 
@@ -70,11 +79,11 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         Vector3 blockPosition = default;
 
         // 表示用オブジェクトの生成
-        for (int Column = 0; Column < ARRAY_COLUMN;Column++)
+        for (int Column = 0; Column < FIELD_COLUMN;Column++)
         {
-            for (int Row = 0; Row < ARRAY_ROW;Row++)
+            for (int Row = 0; Row < FIELD_ROW;Row++)
             {
-                blockPosition.x = _positionWidth[Row];      // 列の位置設定
+                blockPosition.x = (_positionOrigin.x + POSITION_INTERVAL * Row);      // 列の位置設定
                 blockPosition.y = _positionHeight[Column];  // 行の位置設定
                 _minoBlockArray[Column, Row] = Instantiate(_minoBlockObject,blockPosition,Quaternion.identity);
             }
@@ -96,19 +105,8 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         // 落下中のミノの位置を更新
         Array.Copy(dropingMinoPosition, _nowDropingMinoPosition, positionLength);
 
-        // 作業用の行列変数
-        int row = default;
-        int column = default;
-
         // 表示を更新
-        for (int i = 0; i < MINO_MAXVALUE; i++)
-        {
-            row = _nowDropingMinoPosition[i,MinoData.ROW];          // 列設定
-            column = _nowDropingMinoPosition[i,MinoData.COLUMN];    // 行設定
-
-            // 表示の更新
-            ChengeBlockColor(_minoBlockArray[column, row], _dropingMinoColor);
-        }
+        DropUpdata(_dropingMinoColor);
     }
 
     /// <summary>
@@ -131,18 +129,8 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         {
             // ミノが存在する場合
 
-            // 作業用の行列変数
-            int row = default;
-            int column = default;
-
-            for (int i = 0; i < MINO_MAXVALUE; i++)
-            {
-                row = _nowDropingMinoPosition[i, MinoData.ROW];         // 列設定
-                column = _nowDropingMinoPosition[i, MinoData.COLUMN];   // 行設定
-
-                // 表示の更新
-                ChengeBlockColor(_minoBlockArray[column,row], MinoData.E_MinoColor.empty);
-            }
+            // 表示を更新
+            DropUpdata(MinoData.E_MinoColor.empty);
         }
         else
         {
@@ -160,9 +148,9 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         MinoData.E_MinoColor[,] staticMinoArray = _iGetMinoArray.GetMinoArray();
 
         // 各ブロックを更新
-        for (int i = 0; i < ARRAY_COLUMN; i++)
+        for (int i = 0; i < FIELD_COLUMN; i++)
         {
-            for (int k = 0; k<ARRAY_ROW; k++)
+            for (int k = 0; k<FIELD_ROW; k++)
             {
                 // 表示に変更がある場合のみ更新
                 if(_nowMinoColor[i,k] != staticMinoArray[i, k])
@@ -179,61 +167,94 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     }
 
     /// <summary>
+    /// 落下中のミノの色を設定するメソッド
+    /// </summary>
+    /// <param name="minoColor">設定する色</param>
+    private void DropUpdata(MinoData.E_MinoColor minoColor)
+    {
+        int row = default;
+        int column = default;
+        for (int i = 0; i < MINO_MAX_VALUE; i++)
+        {
+            row = _nowDropingMinoPosition[i, MinoData.ROW];         // 列設定
+            column = _nowDropingMinoPosition[i, MinoData.COLUMN];   // 行設定
+
+            // 表示の更新
+            ChengeBlockColor(_minoBlockArray[column, row], minoColor);
+        }
+    }
+
+    /// <summary>
     /// 表示用オブジェクトを更新するメソッド
     /// </summary>
     /// <param name="block">更新する表示用オブジェクト</param>
     /// <param name="minoColor">更新する色</param>
     private void ChengeBlockColor(GameObject block,MinoData.E_MinoColor minoColor)
     {
+        // 表示か非表示か判定
+        if(minoColor != MinoData.E_MinoColor.empty)
+        {
+            // 色の設定
+            block.GetComponent<Renderer>().material.color = ChengeColor(minoColor);
+            // 表示する
+            block.SetActive(true);
+        }
+        else
+        {
+            // 非表示にする
+            block.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// E_MinoColorをColorに変換する
+    /// </summary>
+    /// <param name="minoColor">変換するE_MinoColor</param>
+    /// <returns>変換されたColor</returns>
+    private Color ChengeColor(MinoData.E_MinoColor minoColor)
+    {
+        // 返り値用変数
+        Color returnColor = default;
+
         // 色ごとに分岐
         switch (minoColor)
         {
             // 水色
             case MinoData.E_MinoColor.cyan:
-                block.GetComponent<Renderer>().material.color = _cyan;
-                block.SetActive(true);
+                returnColor = _cyan;
                 break;
 
             // 紫色
             case MinoData.E_MinoColor.purple:
-                block.GetComponent<Renderer>().material.color = _purple;
-                block.SetActive(true);
+                returnColor = _purple;
                 break;
 
             // 赤色
             case MinoData.E_MinoColor.red:
-                block.GetComponent<Renderer>().material.color = _red;
-                block.SetActive(true);
+                returnColor = _red;
                 break;
 
             // 緑色
             case MinoData.E_MinoColor.green:
-                block.GetComponent<Renderer>().material.color = _green;
-                block.SetActive(true);
+                returnColor = _green;
                 break;
 
             // 黄色
             case MinoData.E_MinoColor.yellow:
-                block.GetComponent<Renderer>().material.color = _yellow;
-                block.SetActive(true);
+                returnColor = _yellow;
                 break;
 
             // オレンジ色
             case MinoData.E_MinoColor.orange:
-                block.GetComponent<Renderer>().material.color = _orange;
-                block.SetActive(true);
+                returnColor = _orange;
                 break;
 
             // 青色
             case MinoData.E_MinoColor.blue:
-                block.GetComponent<Renderer>().material.color = _blue;
-                block.SetActive(true);
-                break;
-
-            // 非表示
-            case MinoData.E_MinoColor.empty:
-                block.SetActive(false);
+                returnColor = _blue;
                 break;
         }
+        //色を返す
+        return returnColor;
     }
 }
