@@ -17,10 +17,10 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     private GameObject _minoBlockObject = default;
 
 
-    // ミノの列数
+    // ミノの行数
     private const int FIELD_ROW = 10;
 
-    // ミノの行数
+    // ミノの列数
     private const int FIELD_COLUMN = 22;
 
     // 落ちてくるミノの個数
@@ -40,20 +40,6 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
 
     // 現在落下中のミノの位置
     private int[,] _nowDropingMinoPosition = new int[4, 2];
-
-    // ミノの位置を設定する原点の位置
-    private Vector2 _positionOrigin = new Vector2(-5f,-11f);
-
-    // ミノの設置間隔
-    private const float POSITION_INTERVAL = 1f;
-
-    // ミノの各行の位置　高さを指定するために使用
-    private float[] _positionHeight = 
-        { -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1,
-            0,   1,  2,  3,  4,  5,  6,  7,  8,  9, 10};
-
-    // ミノの各列の位置　左右の位置を指定するために使用
-    private float[] _positionWidth = { -5,-4,-3,-2,-1,0,1,2,3,4 };
 
     // ミノの色 -------------------------------------------
     private readonly Color _cyan     = new Color( 0,1,1);
@@ -78,14 +64,20 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
         // 生成位置
         Vector3 blockPosition = default;
 
+        // ミノの位置を設定する原点の位置
+        Vector2 _positionOrigin = new Vector2(-5f, -11f);
+
+        // ミノの設置間隔
+        const float POSITION_INTERVAL = 1f;
+
         // 表示用オブジェクトの生成
-        for (int Column = 0; Column < FIELD_COLUMN;Column++)
+        for (int Row = 0; Row < FIELD_COLUMN; Row++)
         {
-            for (int Row = 0; Row < FIELD_ROW;Row++)
+            for (int Column = 0; Column < FIELD_ROW; Column++)
             {
-                blockPosition.x = (_positionOrigin.x + POSITION_INTERVAL * Row);      // 列の位置設定
-                blockPosition.y = _positionHeight[Column];  // 行の位置設定
-                _minoBlockArray[Column, Row] = Instantiate(_minoBlockObject,blockPosition,Quaternion.identity);
+                blockPosition.x = _positionOrigin.x + (POSITION_INTERVAL * Column); // 列の位置設定
+                blockPosition.y = _positionOrigin.y + (POSITION_INTERVAL * Row);    // 行の位置設定
+                _minoBlockArray[Row, Column] = Instantiate(_minoBlockObject,blockPosition,Quaternion.identity);
             }
         }
     }
@@ -172,15 +164,18 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     /// <param name="minoColor">設定する色</param>
     private void DropUpdata(MinoData.E_MinoColor minoColor)
     {
+        // 行列指定用の作業変数
         int row = default;
         int column = default;
+
+        // 各ブロックを更新
         for (int i = 0; i < MINO_MAX_VALUE; i++)
         {
-            row = _nowDropingMinoPosition[i, MinoData.ROW];         // 列設定
-            column = _nowDropingMinoPosition[i, MinoData.COLUMN];   // 行設定
+            row = _nowDropingMinoPosition[i, MinoData.ROW];         // 行設定
+            column = _nowDropingMinoPosition[i, MinoData.COLUMN];   // 列設定
 
             // 表示の更新
-            ChengeBlockColor(_minoBlockArray[column, row], minoColor);
+            ChengeBlockColor(_minoBlockArray[row, column], minoColor);
         }
     }
 
