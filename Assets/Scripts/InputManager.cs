@@ -11,6 +11,7 @@ public class InputManager : MonoBehaviour
     public InputEventHandler InputDownDown;
     public InputEventHandler InputDownDecision;
     public InputEventHandler InputDownCancel;
+    public InputEventHandler InputDownHold;
 
     public InputEventHandler InputHoldRight;
     public InputEventHandler InputHoldLeft;
@@ -71,24 +72,30 @@ public class InputManager : MonoBehaviour
 
 
         // 決定ボタンの入力
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Z))
         {
             InputDownDecision?.Invoke();
         }
-        if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Z))
+        if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Z))
         {
             InputHoldDecision?.Invoke();
         }
 
 
         // キャンセルボタンの入力
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.X))
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.X))
         {
             InputDownCancel?.Invoke();
         }
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.X))
+        if (Input.GetMouseButton(1) || Input.GetKey(KeyCode.X))
         {
             InputHoldCancel?.Invoke();
+        }
+
+        // ホールドボタンの入力
+        if (Input.GetMouseButtonDown(2) || Input.GetKeyDown(KeyCode.Space))
+        {
+            InputDownHold?.Invoke();
         }
     }
 }

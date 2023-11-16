@@ -6,4 +6,5 @@ interface IFInputMainGame
     void InputHoldDown();
     void InputDownDecision();
     void InputDownCancel();
+    void InputDownHold();
 }

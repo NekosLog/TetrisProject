@@ -21,7 +21,7 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     private const int FIELD_ROW = 10;
 
     // ミノの列数
-    private const int FIELD_COLUMN = 22;
+    private const int FIELD_COLUMN = 23;
 
     // 落ちてくるミノの個数
     private const int MINO_MAX_VALUE = 4;
@@ -30,10 +30,10 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     private const int ENPTY_VALUE = -99;
 
     // ミノの表示用オブジェクト配列　それぞれに_minoBlockObjectを格納する
-    private GameObject[,] _minoBlockArray = new GameObject[22, 10];
+    private GameObject[,] _minoBlockArray = new GameObject[23, 10];
 
     // ミノの現在色の保存用配列　各位置ごとの色を保存
-    private MinoData.E_MinoColor[,] _nowMinoColor = new MinoData.E_MinoColor[22, 10];
+    private MinoData.E_MinoColor[,] _nowMinoColor = new MinoData.E_MinoColor[23, 10];
 
     // 落下中のミノの色　落下中のミノを表示するために使用
     private MinoData.E_MinoColor _dropingMinoColor = MinoData.E_MinoColor.empty;
@@ -136,6 +136,9 @@ public class MinoLooks : MonoBehaviour,IFDropMinoLooksUpdata,IFStayMinoLooksUpda
     /// </summary>
     public void StayMinoLooksUpdata()
     {
+        // 落下中のミノを削除
+        DeleteLastDrop();
+
         // 停止中のミノの配列を一時保管する変数
         MinoData.E_MinoColor[,] staticMinoArray = _iGetMinoArray.GetMinoArray();
 
