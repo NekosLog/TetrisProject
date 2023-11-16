@@ -110,5 +110,6 @@ public class StateManager:MonoBehaviour
         _inputManager.InputHoldDown = _iInputMainGame.InputHoldDown;
         _inputManager.InputDownDecision = _iInputMainGame.InputDownDecision;
         _inputManager.InputDownCancel = _iInputMainGame.InputDownCancel;
+        _inputManager.InputDownHold = _iInputMainGame.InputDownHold;
     }
 }
