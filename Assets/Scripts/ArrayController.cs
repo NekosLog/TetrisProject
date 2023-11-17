@@ -7,11 +7,11 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
     #region ïœêî
     private IFStayMinoLooksUpdata _iStayMinoLooksUpdata;
 
-    private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[23, 10];
+    private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[ArrayData.ROW, ArrayData.COLUMN];
     private List<int> DropedRowList = new List<int>();
     private List<int> DeleteLineList = new List<int>();
     private int _deleteLineCounter = default;
-    private int[] _fallValueArray = new int[22];
+    private int[] _fallValueArray = new int[ArrayData.ROW - 1];
 
     #endregion
 
