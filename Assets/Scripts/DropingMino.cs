@@ -35,7 +35,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
 
     private const int ROTATE_VALUE = 90;
 
-    private const int MAX_COLUMN = 9;
+    private const int MAX_COLUMN = ArrayData.COLUMN - 1;
     private const int MIN_COLUMN = 0;
     private const int MIN_ROW = 0;
 
@@ -267,56 +267,56 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
         switch (_dropingMinoColor)
         {
             case MinoData.E_MinoColor.cyan:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_STRANGE_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_STRANGE_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_STRANGE_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_STRANGE_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_CYAN;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
 
 
             case MinoData.E_MinoColor.purple:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_NORMAL_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_NORMAL_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_NORMAL_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_NORMAL_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_PURPLE;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
 
 
             case MinoData.E_MinoColor.red:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_NORMAL_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_NORMAL_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_NORMAL_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_NORMAL_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_RED;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
 
 
             case MinoData.E_MinoColor.green:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_NORMAL_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_NORMAL_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_NORMAL_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_NORMAL_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_GREEN;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
 
 
             case MinoData.E_MinoColor.yellow:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_STRANGE_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_STRANGE_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_STRANGE_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_STRANGE_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_YELLOW;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
 
 
             case MinoData.E_MinoColor.orange:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_NORMAL_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_NORMAL_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_NORMAL_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_NORMAL_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_ORANGE;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
 
 
             case MinoData.E_MinoColor.blue:
-                _dropingMinoOrigin[MinoData.COLUMN] = ORIGIN_NORMAL_COLUMN;
-                _dropingMinoOrigin[MinoData.ROW] = ORIGIN_NORMAL_ROW;
+                _dropingMinoOrigin[MinoData.COLUMN_NUMBER] = ORIGIN_NORMAL_COLUMN;
+                _dropingMinoOrigin[MinoData.ROW_NUMBER] = ORIGIN_NORMAL_ROW;
                 _dropingminoPositions = INITIAL_POSITIONS_BLUE;
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 break;
@@ -325,25 +325,25 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
 
     private float[] MoveUp(float[] positionArray)
     {
-        positionArray[MinoData.ROW]++;
+        positionArray[MinoData.ROW_NUMBER]++;
         return positionArray;
     }
 
     private float[] MoveDown(float[] positionArray)
     {
-        positionArray[MinoData.ROW]--;
+        positionArray[MinoData.ROW_NUMBER]--;
         return positionArray;
     }
 
     private float[] MoveRight(float[] positionArray)
     {
-        positionArray[MinoData.COLUMN]++;
+        positionArray[MinoData.COLUMN_NUMBER]++;
         return positionArray;
     }
 
     private float[] MoveLeft(float[] positionArray)
     {
-        positionArray[MinoData.COLUMN]--;
+        positionArray[MinoData.COLUMN_NUMBER]--;
         return positionArray;
     }
 
@@ -371,8 +371,8 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
     {
         for (int minoNumber = 0; minoNumber < 4; minoNumber++)
         {
-            int dropingMinoRow = GetDropingMinoRow(minoNumber) + addValue[MinoData.ROW];
-            int dropingMinoColumn = GetDropingMinoColumn(minoNumber) + addValue[MinoData.COLUMN];
+            int dropingMinoRow = GetDropingMinoRow(minoNumber) + addValue[MinoData.ROW_NUMBER];
+            int dropingMinoColumn = GetDropingMinoColumn(minoNumber) + addValue[MinoData.COLUMN_NUMBER];
 
             if (CheckOut(dropingMinoRow, dropingMinoColumn) || CheckStack(dropingMinoRow, dropingMinoColumn))
             {
@@ -401,8 +401,8 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
     {
         for (int minoNumber = 0; minoNumber < 4; minoNumber++)
         {
-            int dropingMinoRow = GetDropingMinoRow(minoNumber) + addValue[MinoData.ROW];
-            int dropingMinoColumn = GetDropingMinoColumn(minoNumber) + addValue[MinoData.COLUMN];
+            int dropingMinoRow = GetDropingMinoRow(minoNumber) + addValue[MinoData.ROW_NUMBER];
+            int dropingMinoColumn = GetDropingMinoColumn(minoNumber) + addValue[MinoData.COLUMN_NUMBER];
 
             if (CheckOut(dropingMinoRow, dropingMinoColumn) || CheckStack(dropingMinoRow, dropingMinoColumn))
             {
@@ -467,19 +467,19 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
     {
         for(int i = 0; i < 4; i++)
         {
-            float posX = positions[i, MinoData.COLUMN];
-            float posY = positions[i, MinoData.ROW];
+            float posX = positions[i, MinoData.COLUMN_NUMBER];
+            float posY = positions[i, MinoData.ROW_NUMBER];
 
             switch (rotationVector)
             {
                 case E_RotationVector.right:
-                    positions[i, MinoData.COLUMN] = posY;
-                    positions[i, MinoData.ROW] = -posX;
+                    positions[i, MinoData.COLUMN_NUMBER] = posY;
+                    positions[i, MinoData.ROW_NUMBER] = -posX;
                     break;
 
                 case E_RotationVector.left:
-                    positions[i, MinoData.COLUMN] = -posY;
-                    positions[i, MinoData.ROW] = posX;
+                    positions[i, MinoData.COLUMN_NUMBER] = -posY;
+                    positions[i, MinoData.ROW_NUMBER] = posX;
                     break;
             }
         }
@@ -488,22 +488,22 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
 
     private int GetDropingMinoColumn(int minoNumber)
     {
-        return (int)(_dropingMinoOrigin[MinoData.COLUMN] + _dropingminoPositions[minoNumber, MinoData.COLUMN]);
+        return (int)(_dropingMinoOrigin[MinoData.COLUMN_NUMBER] + _dropingminoPositions[minoNumber, MinoData.COLUMN_NUMBER]);
     }
 
     private int GetDropingMinoColumn(float[,] positions ,int minoNumber)
     {
-        return (int)(_dropingMinoOrigin[MinoData.COLUMN] + positions[minoNumber, MinoData.COLUMN]);
+        return (int)(_dropingMinoOrigin[MinoData.COLUMN_NUMBER] + positions[minoNumber, MinoData.COLUMN_NUMBER]);
     }
 
     private int GetDropingMinoRow(int minoNumber)
     {
-        return (int)(_dropingMinoOrigin[MinoData.ROW] + _dropingminoPositions[minoNumber, MinoData.ROW]);
+        return (int)(_dropingMinoOrigin[MinoData.ROW_NUMBER] + _dropingminoPositions[minoNumber, MinoData.ROW_NUMBER]);
     }
 
     private int GetDropingMinoRow(float[,] positions ,int minoNumber)
     {
-        return (int)(_dropingMinoOrigin[MinoData.ROW] + positions[minoNumber, MinoData.ROW]);
+        return (int)(_dropingMinoOrigin[MinoData.ROW_NUMBER] + positions[minoNumber, MinoData.ROW_NUMBER]);
     }
 
     public int[] GetDropingMinoPosition(int minoNumber)
@@ -517,10 +517,9 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
         int[,] minoPosition = new int[4, 2];
         for (int i = 0; i < 4; i++)
         {
-            minoPosition[i, MinoData.COLUMN] = GetDropingMinoColumn(i);
-            minoPosition[i, MinoData.ROW] = GetDropingMinoRow(i);
+            minoPosition[i, MinoData.COLUMN_NUMBER] = GetDropingMinoColumn(i);
+            minoPosition[i, MinoData.ROW_NUMBER] = GetDropingMinoRow(i);
         }
         return minoPosition;
     }
-
 }

@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public InputEventHandler InputDownDecision;
     public InputEventHandler InputDownCancel;
     public InputEventHandler InputDownHold;
+    public InputEventHandler InputDownMenu;
 
     public InputEventHandler InputHoldRight;
     public InputEventHandler InputHoldLeft;
@@ -96,6 +97,12 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonDown(2) || Input.GetKeyDown(KeyCode.Space))
         {
             InputDownHold?.Invoke();
+        }
+
+        // メニューボタンの入力
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            InputDownMenu?.Invoke();
         }
     }
 }

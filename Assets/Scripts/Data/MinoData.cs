@@ -20,7 +20,7 @@ public class MinoData
         public const int COLUMN = 1;
     }
 
-    public const int ROW = 0;
+    public const int ROW_NUMBER = 0;
 
-    public const int COLUMN = 1;
+    public const int COLUMN_NUMBER = 1;
 }

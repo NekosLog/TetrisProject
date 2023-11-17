@@ -13,6 +13,14 @@ public class StateManager:MonoBehaviour
 
     private IFInputOption _iInputOption = default;
 
+    public delegate void StateDelegate();
+
+    public StateDelegate MainGameEvent;
+    public StateDelegate TitleMenuEvent;
+    public StateDelegate InGameMenuEvent;
+    public StateDelegate ResultMenuEvent;
+    public StateDelegate OptionEvent;
+
     public enum InputState 
     {
         MainGame     = 0,
@@ -32,6 +40,26 @@ public class StateManager:MonoBehaviour
         _iInputInGameMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputInGameMenu>();
         _iInputResultMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputResultMenu>();
         _iInputOption = GameObject.FindWithTag("GameManager").GetComponent<IFInputOption>();
+
+        // MainGame
+        MainGameEvent += ExitInputState;
+        MainGameEvent += SetInputMainGame;
+
+        // TitleMenu
+        TitleMenuEvent += ExitInputState;
+        TitleMenuEvent += SetInputTitleMenu;
+
+        // InGameMenu
+        InGameMenuEvent += ExitInputState;
+        InGameMenuEvent += SetInputInGameMenu;
+
+        // ResultMenu
+        ResultMenuEvent += ExitInputState;
+        ResultMenuEvent += SetInputResult;
+
+        // Option
+        OptionEvent += ExitInputState;
+        OptionEvent += SetInputOption;
     }
 
     private void Start()
@@ -44,61 +72,43 @@ public class StateManager:MonoBehaviour
         switch (inputState)
         {
             case InputState.MainGame:
-                ExitInputState(_nowInputState);
-                SetInputMainGame();
+                MainGameEvent?.Invoke();
                 break;
 
             case InputState.TitleMenu:
-                ExitInputState(_nowInputState);
-
+                SetInputTitleMenu();
+                TitleMenuEvent?.Invoke();
                 break;
 
             case InputState.InGameMenu:
-                ExitInputState(_nowInputState);
-
+                InGameMenuEvent?.Invoke();
                 break;
 
             case InputState.ResultMenu:
-                ExitInputState(_nowInputState);
-
+                ResultMenuEvent?.Invoke();
                 break;
 
             case InputState.OptionMenu:
-                ExitInputState(_nowInputState);
-
+                OptionEvent?.Invoke();
                 break;
         }
     }
 
-    private void ExitInputState(InputState nowInputState)
+    private void ExitInputState()
     {
-        switch (nowInputState)
-        {
-            case InputState.MainGame:
-                _inputManager.InputHoldRight = null;
-                _inputManager.InputHoldLeft = null;
-                _inputManager.InputDownUp = null;
-                _inputManager.InputHoldDown = null;
-                _inputManager.InputDownDecision = null;
-                _inputManager.InputDownCancel = null;
-                break;
-
-            case InputState.TitleMenu:
-
-                break;
-
-            case InputState.InGameMenu:
-
-                break;
-
-            case InputState.ResultMenu:
-
-                break;
-
-            case InputState.OptionMenu:
-
-                break;
-        }
+        _inputManager.InputDownRight = null;
+        _inputManager.InputHoldRight = null;
+        _inputManager.InputDownLeft = null;
+        _inputManager.InputHoldLeft = null;
+        _inputManager.InputDownUp = null;
+        _inputManager.InputHoldUp = null;
+        _inputManager.InputDownDown = null;
+        _inputManager.InputHoldDown = null;
+        _inputManager.InputDownDecision = null;
+        _inputManager.InputHoldDecision = null;
+        _inputManager.InputDownCancel = null;
+        _inputManager.InputHoldCancel = null;
+        _inputManager.InputDownHold = null;
     }
 
 
@@ -111,5 +121,26 @@ public class StateManager:MonoBehaviour
         _inputManager.InputDownDecision = _iInputMainGame.InputDownDecision;
         _inputManager.InputDownCancel = _iInputMainGame.InputDownCancel;
         _inputManager.InputDownHold = _iInputMainGame.InputDownHold;
+    }
+
+    private void SetInputTitleMenu()
+    {
+        _inputManager.InputDownUp = _iInputTitleMenu.UpKeyDown;
+        _inputManager.InputDownDown = _iInputTitleMenu.DownKeyDown;
+        _inputManager.InputDownDecision = _iInputTitleMenu.DecisionKeyDown;
+        _inputManager.InputDownCancel = _iInputTitleMenu.CancelKeyDown;
+    }
+
+    private void SetInputInGameMenu()
+    {
+
+    }
+    private void SetInputResult()
+    {
+
+    }
+    private void SetInputOption()
+    {
+
     }
 }
