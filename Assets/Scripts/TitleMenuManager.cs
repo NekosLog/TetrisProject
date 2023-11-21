@@ -2,39 +2,39 @@ using UnityEngine;
 
 public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
 {
-    private IFTitleMenuUI iTitleMenuUI = default;
-    private E_MenuItem TitleMenuIndex = E_MenuItem.GameStart;
+    private IFTitleMenuUI _iTitleMenuUI = default;
+    private E_MenuItem _titleMenuIndex = E_MenuItem.GameStart;
     private const int INDEX_LOWER_LIMIT = 0;
     private const int INDEX_UPPER_LIMIT = 2;
 
     private void Awake()
     {
-        iTitleMenuUI = GameObject.FindWithTag("GameManager").GetComponent<IFTitleMenuUI>();
+        _iTitleMenuUI = GameObject.FindWithTag("GameManager").GetComponent<IFTitleMenuUI>();
     }
 
     public void UpKeyDown()
     {
         // IndexÇàÍÇ¬è„Ç∞ÇÈ
-        if ((int)TitleMenuIndex < INDEX_UPPER_LIMIT)
+        if ((int)_titleMenuIndex < INDEX_UPPER_LIMIT)
         {
-            TitleMenuIndex++;
-            iTitleMenuUI.ChengeUI(TitleMenuIndex);
+            _titleMenuIndex++;
+            _iTitleMenuUI.ChengeUI(_titleMenuIndex);
         }
     }
     public void DownKeyDown()
     {
         // IndexÇàÍÇ¬â∫Ç∞ÇÈ
-        if ((int)TitleMenuIndex > INDEX_LOWER_LIMIT)
+        if ((int)_titleMenuIndex > INDEX_LOWER_LIMIT)
         {
-            TitleMenuIndex--;
-            iTitleMenuUI.ChengeUI(TitleMenuIndex);
+            _titleMenuIndex--;
+            _iTitleMenuUI.ChengeUI(_titleMenuIndex);
         }
     }
     public void DecisionKeyDown()
     {
         // ëIëçÄñ⁄ÇÃãNìÆ
-        EventExecution(TitleMenuIndex);
-        iTitleMenuUI.EventExecution(TitleMenuIndex);
+        EventExecution(_titleMenuIndex);
+        _iTitleMenuUI.EventExecution(_titleMenuIndex);
     }
     public void CancelKeyDown()
     {
@@ -44,7 +44,7 @@ public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
     public void ReSetIndex()
     {
         const E_MenuItem START_INDEX = E_MenuItem.GameStart;
-        TitleMenuIndex = START_INDEX;
+        _titleMenuIndex = START_INDEX;
     }
     
 

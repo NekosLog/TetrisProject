@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SEData : MonoBehaviour
 {
+    [SerializeField, Tooltip("SE用のスピーカ")]
+    public AudioSource _speaker = default;
     [SerializeField, Tooltip("メニュー移動時のSE")]
     public AudioClip _menuChangeSE = default;
     [SerializeField, Tooltip("メニュー決定時のSE")]

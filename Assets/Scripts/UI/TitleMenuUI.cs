@@ -5,30 +5,43 @@ using UnityEngine;
 public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
 {
     [SerializeField, Tooltip("GameStartの矢印")]
-    private SpriteRenderer arrow_GameStart = default;
+    private SpriteRenderer _arrow_GameStart = default;
     [SerializeField, Tooltip("OpenOptionの矢印")]
-    private SpriteRenderer arrow_OpenOption = default;
+    private SpriteRenderer _arrow_OpenOption = default;
     [SerializeField, Tooltip("Exitの矢印")]
-    private SpriteRenderer arrow_Exit = default;
-        
+    private SpriteRenderer _arrow_Exit = default;
+    [SerializeField, Tooltip("矢印の普段の色")]
+    private Color _defaultArrowColor = Color.red;
+    [SerializeField, Tooltip("矢印の決定時の色")]
+    private Color _executionArrowColor = Color.blue;
+
+    // SEデータ
+    private SEData _sound = default;
+
+    private void Awake()
+    {
+        // SEデータの取得
+        _sound = GameObject.FindWithTag("GameManager").GetComponent<SEData>();
+    }
+
     public void ChengeUI(E_MenuItem index)
     {
         switch (index)
         {
             case E_MenuItem.GameStart:
-                arrow_GameStart.enabled = true;
-                arrow_OpenOption.enabled = false;
-                arrow_Exit.enabled = false;
+                _arrow_GameStart.enabled = true;
+                _arrow_OpenOption.enabled = false;
+                _arrow_Exit.enabled = false;
                 break;
             case E_MenuItem.OpenOption:
-                arrow_GameStart.enabled = false;
-                arrow_OpenOption.enabled = true;
-                arrow_Exit.enabled = false;
+                _arrow_GameStart.enabled = false;
+                _arrow_OpenOption.enabled = true;
+                _arrow_Exit.enabled = false;
                 break;
             case E_MenuItem.Exit:
-                arrow_GameStart.enabled = false;
-                arrow_OpenOption.enabled = false;
-                arrow_Exit.enabled = true;
+                _arrow_GameStart.enabled = false;
+                _arrow_OpenOption.enabled = false;
+                _arrow_Exit.enabled = true;
                 break;
         }
     }
@@ -37,7 +50,28 @@ public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
     {
         switch (index)
         {
+            case E_MenuItem.GameStart:
+                _sound._speaker.PlayOneShot(_sound._menuExecutionSE);
+                break;
 
+            case E_MenuItem.OpenOption:
+                _sound._speaker.PlayOneShot(_sound._menuExecutionSE);
+                break;
+
+            case E_MenuItem.Exit:
+                _sound._speaker.PlayOneShot(_sound._menuExecutionSE);
+                break;
         }
+    }
+
+    private void GameStartUIEvent()
+    {
+        _arrow_GameStart.color = _executionArrowColor;
+        Invoke("CloseMenu",1f);
+    }
+
+    IEnumerator CloseMenu()
+    {
+        yield return new WaitForSeconds(1);
     }
 }
