@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - GameManager
+  - Score
+  - Level
+  - Time
+  - IngameUI
+  - TitleUI
   layers:
   - Default
   - TransparentFX
