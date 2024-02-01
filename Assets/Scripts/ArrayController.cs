@@ -6,6 +6,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 {
     #region ïœêî
     private IFStayMinoLooksUpdata _iStayMinoLooksUpdata;
+    private IFDropStart _iDropStart;
 
     private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[ArrayData.ROW, ArrayData.COLUMN];
     private List<int> DropedRowList = new List<int>();
@@ -18,6 +19,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
     private void Awake()
     {
         _iStayMinoLooksUpdata = GameObject.FindWithTag("GameManager").GetComponent<IFStayMinoLooksUpdata>();
+        _iDropStart = GameObject.FindWithTag("GameManager").GetComponent<IFDropStart>();
         ClearArray();
         _iStayMinoLooksUpdata.StayMinoLooksUpdata();
     }
@@ -130,6 +132,20 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 
         CheckArray();
         _iStayMinoLooksUpdata.StayMinoLooksUpdata();
+
+        int OverRow = 20;
+
+        for (int column = 0; column < ArrayData.COLUMN; column++)
+        {
+            if(_minoArray[OverRow, column] != MinoData.E_MinoColor.empty)
+            {
+
+                return;
+            }
+        }
+
+        _iDropStart.ReFresh();
+        _iDropStart.DropStart();
     }
 
     public MinoData.E_MinoColor[,] GetMinoArray()

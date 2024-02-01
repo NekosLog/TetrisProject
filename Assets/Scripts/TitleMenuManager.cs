@@ -2,14 +2,18 @@ using UnityEngine;
 
 public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
 {
+    private IFStateEvent _iStateEvent = default;
     private IFTitleMenuUI _iTitleMenuUI = default;
+    private IFDropStart _iDropStart = default;
     private E_MenuItem _titleMenuIndex = E_MenuItem.GameStart;
     private const int INDEX_LOWER_LIMIT = 0;
     private const int INDEX_UPPER_LIMIT = 2;
 
     private void Awake()
     {
+        _iStateEvent = GameObject.FindWithTag("GameManager").GetComponent<IFStateEvent>();
         _iTitleMenuUI = GameObject.FindWithTag("GameManager").GetComponent<IFTitleMenuUI>();
+        _iDropStart = GameObject.FindWithTag("GameManager").GetComponent<IFDropStart>();
     }
 
     public void UpKeyDown()
@@ -56,9 +60,9 @@ public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
                 GameStartEvent();
                 break;
 
-            case E_MenuItem.OpenOption:
-                OpenOptionEvent();
-                break;
+            //case E_MenuItem.OpenOption:
+            //    OpenOptionEvent();
+            //    break;                    åªç›ñ¢é¿ëï
 
             case E_MenuItem.Exit:
                 ExitEvent();
@@ -68,13 +72,14 @@ public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
 
     private void GameStartEvent()
     {
-
+        _iStateEvent.ChengeInputState(InputState.MainGame);
+        Invoke("DropStart", 1f);
     }
 
-    private void OpenOptionEvent()
-    {
+    //private void OpenOptionEvent()Å@åªç›ñ¢é¿ëï
+    //{
 
-    }
+    //}
 
     private void ExitEvent()
     {
@@ -83,5 +88,10 @@ public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
         #else
         Application.Quit();
         #endif
+    }
+
+    private void DropStart()
+    {
+        _iDropStart.DropStart();
     }
 }

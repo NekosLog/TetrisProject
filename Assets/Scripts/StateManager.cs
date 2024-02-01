@@ -1,5 +1,5 @@
 using UnityEngine;
-public class StateManager:MonoBehaviour
+public class StateManager:MonoBehaviour, IFStateEvent
 {
     private InputManager _inputManager = default;
 
@@ -20,15 +20,6 @@ public class StateManager:MonoBehaviour
     public StateDelegate InGameMenuEvent;
     public StateDelegate ResultMenuEvent;
     public StateDelegate OptionEvent;
-
-    public enum InputState 
-    {
-        MainGame     = 0,
-        TitleMenu    = 1,
-        InGameMenu   = 2,
-        ResultMenu   = 3,
-        OptionMenu   = 4
-    }
 
     private InputState _nowInputState = InputState.MainGame;
 
@@ -64,7 +55,7 @@ public class StateManager:MonoBehaviour
 
     private void Start()
     {
-        ChengeInputState(InputState.MainGame);
+        ChengeInputState(InputState.TitleMenu);
     }
 
     public void ChengeInputState(InputState inputState)

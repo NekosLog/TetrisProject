@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DropingMino : MonoBehaviour, IFInputMainGame
+public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
 {
     #region ïœêî
     private IFDropMino _iDropMino;
@@ -143,7 +143,6 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
                 else
                 {
                     _iLandingMinos.LandingMinos(LandingMinoList());
-                    ReFresh();
                 }
             }
         }
@@ -183,7 +182,14 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
 
     public void InputDownUp()
     {
-
+        if (_dropingMinoColor != MinoData.E_MinoColor.empty)
+        {
+            while (CanMove(down))
+            {
+                _dropingMinoOrigin = MoveDown(_dropingMinoOrigin);
+            }
+            _iLandingMinos.LandingMinos(LandingMinoList());
+        }
     }
 
     public void InputHoldDown()
@@ -200,7 +206,6 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
             else
             {
                 _iLandingMinos.LandingMinos(LandingMinoList());
-                ReFresh();
             }
         }
     }
@@ -453,7 +458,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame
         return list;
     }
 
-    private void ReFresh()
+    public void ReFresh()
     {
         _dropingMinoColor = MinoData.E_MinoColor.empty;
         //_dropingMinoOrigin = default;

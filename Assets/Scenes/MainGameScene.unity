@@ -595,6 +595,8 @@ GameObject:
   - component: {fileID: 598099368}
   - component: {fileID: 598099374}
   - component: {fileID: 598099375}
+  - component: {fileID: 598099377}
+  - component: {fileID: 598099376}
   m_Layer: 0
   m_Name: Manager
   m_TagString: GameManager
@@ -700,6 +702,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee66f879579f83c458a63ff24cff747e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &598099376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598099367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a34216ec7ae51924481ac52d219babbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _titleMenu: {fileID: 356909096}
+  _inGameMenu: {fileID: 1528506847}
+  _arrow_GameStart: {fileID: 1404080530}
+  _arrow_Exit: {fileID: 905907881}
+  _defaultArrowColor: {r: 1, g: 1, b: 1, a: 1}
+  _executionArrowColor: {r: 1, g: 0.15835318, b: 0, a: 1}
+--- !u!114 &598099377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598099367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea95cbda24b724b488a4c05a30a50cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &786270577
