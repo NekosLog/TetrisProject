@@ -9,16 +9,17 @@ public class StateManager:MonoBehaviour, IFStateEvent
 
     private IFInputInGameMenu _iInputInGameMenu = default;
 
-    private IFInputResultMenu _iInputResultMenu = default;
+    private IFInputGameOver _iInputGameOver = default;
 
     private IFInputOption _iInputOption = default;
+
 
     public delegate void StateDelegate();
 
     public StateDelegate MainGameEvent;
     public StateDelegate TitleMenuEvent;
     public StateDelegate InGameMenuEvent;
-    public StateDelegate ResultMenuEvent;
+    public StateDelegate GameOverEvent;
     public StateDelegate OptionEvent;
 
     private InputState _nowInputState = InputState.MainGame;
@@ -29,7 +30,7 @@ public class StateManager:MonoBehaviour, IFStateEvent
         _iInputMainGame = GameObject.FindWithTag("GameManager").GetComponent<IFInputMainGame>();
         _iInputTitleMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputTitleMenu>();
         _iInputInGameMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputInGameMenu>();
-        _iInputResultMenu = GameObject.FindWithTag("GameManager").GetComponent<IFInputResultMenu>();
+        _iInputGameOver = GameObject.FindWithTag("GameManager").GetComponent<IFInputGameOver>();
         _iInputOption = GameObject.FindWithTag("GameManager").GetComponent<IFInputOption>();
 
         // MainGame
@@ -44,9 +45,9 @@ public class StateManager:MonoBehaviour, IFStateEvent
         InGameMenuEvent += ExitInputState;
         InGameMenuEvent += SetInputInGameMenu;
 
-        // ResultMenu
-        ResultMenuEvent += ExitInputState;
-        ResultMenuEvent += SetInputResult;
+        // GameOver
+        GameOverEvent += ExitInputState;
+        GameOverEvent += SetInputGameOver;
 
         // Option
         OptionEvent += ExitInputState;
@@ -67,7 +68,6 @@ public class StateManager:MonoBehaviour, IFStateEvent
                 break;
 
             case InputState.TitleMenu:
-                SetInputTitleMenu();
                 TitleMenuEvent?.Invoke();
                 break;
 
@@ -75,8 +75,8 @@ public class StateManager:MonoBehaviour, IFStateEvent
                 InGameMenuEvent?.Invoke();
                 break;
 
-            case InputState.ResultMenu:
-                ResultMenuEvent?.Invoke();
+            case InputState.GameOver:
+                GameOverEvent?.Invoke();
                 break;
 
             case InputState.OptionMenu:
@@ -126,9 +126,9 @@ public class StateManager:MonoBehaviour, IFStateEvent
     {
 
     }
-    private void SetInputResult()
+    private void SetInputGameOver()
     {
-
+        _inputManager.InputDownDecision = _iInputGameOver.DecisionKeyDown;
     }
     private void SetInputOption()
     {

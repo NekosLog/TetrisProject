@@ -5,8 +5,10 @@ using UnityEngine;
 public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 {
     #region ïœêî
-    private IFStayMinoLooksUpdata _iStayMinoLooksUpdata;
-    private IFDropStart _iDropStart;
+    private IFStateEvent _stateEvent = default;
+    private IFStayMinoLooksUpdata _iStayMinoLooksUpdata = default;
+    private IFDropStart _iDropStart = default;
+    private IFGameOverManager _iGameOverManager = default;
 
     private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[ArrayData.ROW, ArrayData.COLUMN];
     private List<int> DropedRowList = new List<int>();
@@ -18,8 +20,10 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 
     private void Awake()
     {
+        _stateEvent = GameObject.FindWithTag("GameManager").GetComponent<IFStateEvent>();
         _iStayMinoLooksUpdata = GameObject.FindWithTag("GameManager").GetComponent<IFStayMinoLooksUpdata>();
         _iDropStart = GameObject.FindWithTag("GameManager").GetComponent<IFDropStart>();
+        _iGameOverManager = GameObject.FindWithTag("GameManager").GetComponent<IFGameOverManager>();
         ClearArray();
         _iStayMinoLooksUpdata.StayMinoLooksUpdata();
     }
@@ -132,6 +136,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 
         CheckArray();
         _iStayMinoLooksUpdata.StayMinoLooksUpdata();
+        _iDropStart.ReFresh();
 
         int OverRow = 20;
 
@@ -139,12 +144,12 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
         {
             if(_minoArray[OverRow, column] != MinoData.E_MinoColor.empty)
             {
-
+                _stateEvent.ChengeInputState(InputState.GameOver);
+                _iGameOverManager.GameOverEvent();
                 return;
             }
         }
 
-        _iDropStart.ReFresh();
         _iDropStart.DropStart();
     }
 
