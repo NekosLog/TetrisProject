@@ -47,10 +47,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
 
     private readonly float[,] INITIAL_POSITIONS_CYAN = 
     {
-        {-0.5f,-1.5f},
-        {-0.5f,-0.5f},
-        {-0.5f,0.5f},
-        {-0.5f,1.5f}
+        {0.5f,-1.5f},
+        {0.5f,-0.5f},
+        {0.5f,0.5f},
+        {0.5f,1.5f}
     };
 
     private readonly float[,] INITIAL_POSITIONS_PURPLE = 
@@ -213,6 +213,12 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
     public void InputDownDecision()
     {
         int nextRotate = _nowRotate - ROTATE_VALUE;
+
+        if (nextRotate == -180)
+        {
+            nextRotate = 180;
+        }
+
         float[,] nextPositions = RotationMino(_dropingminoPositions,_rotationLeft);
 
         if (CanMove(nextPositions))
@@ -230,6 +236,12 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
     public void InputDownCancel()
     {
         int nextRotate = _nowRotate + ROTATE_VALUE;
+
+        if (nextRotate == 270)
+        {
+            nextRotate = -90;
+        }
+
         float[,] nextPositions = RotationMino(_dropingminoPositions, _rotationRight);
 
         if (CanMove(nextPositions))
@@ -490,6 +502,21 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         }
         return positions;
     }
+
+    private void SuperRotate(int nextRotate, float[,] nextPosition)
+    {
+        int patternNumber = default;
+
+        if (nextRotate == 90)
+        {
+
+        }
+        else if (nextRotate == -90)
+        {
+
+        }
+    }
+
 
     private int GetDropingMinoColumn(int minoNumber)
     {
