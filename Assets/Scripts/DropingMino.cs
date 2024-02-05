@@ -5,10 +5,11 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
 {
     #region 変数
     private IFDropMino _iDropMino;
-    private IFGetKeyInterval _iGetKeyInterval;
+    private IFDropInterval _iGetDropInterval;
     private IFGetMinoArray _iGetMinoArray;
     private IFLandingMinos _iLandingMinos;
     private IFDropMinoLooksUpdata _iDropMinoLooksUpdata;
+    private SoundData _sound = default;
 
     private MinoData.E_MinoColor _dropingMinoColor = MinoData.E_MinoColor.empty;
     private float[] _dropingMinoOrigin = new float[2];
@@ -106,10 +107,12 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
     private void Awake()
     {
         _iDropMino = GameObject.FindWithTag("GameManager").GetComponent<IFDropMino>();
-        _iGetKeyInterval = GameObject.FindWithTag("GameManager").GetComponent<IFGetKeyInterval>();
+        _iGetDropInterval = GameObject.FindWithTag("GameManager").GetComponent<IFDropInterval>();
         _iGetMinoArray = GameObject.FindWithTag("GameManager").GetComponent<IFGetMinoArray>();
         _iLandingMinos = GameObject.FindWithTag("GameManager").GetComponent<IFLandingMinos>();
         _iDropMinoLooksUpdata = GameObject.FindWithTag("GameManager").GetComponent<IFDropMinoLooksUpdata>();
+        // SEデータの取得
+        _sound = GameObject.FindWithTag("GameManager").GetComponent<SoundData>();
     }
 
     private void Update()
@@ -132,16 +135,18 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         if (_dropingMinoColor != MinoData.E_MinoColor.empty)
         {
             _minoFallTime += Time.deltaTime;
-            if(_minoFallTime > _minoFallInterval)
+            if(_minoFallTime > _iGetDropInterval.GetMinoDropInterval())
             {
                 _minoFallTime = 0f;
                 if (CanMove(down))
                 {
-                    _dropingMinoOrigin = MoveDown(_dropingMinoOrigin);
+                    int moveDown = -1;
+                    MoveMino(moveDown, 0);
                     _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
                 }
                 else
                 {
+                    _sound._SEspeaker.PlayOneShot(_sound._minoLandingSE);
                     _iLandingMinos.LandingMinos(LandingMinoList());
                 }
             }
@@ -160,8 +165,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         {
             if (CanMove(right))
             {
-                _dropingMinoOrigin = MoveRight(_dropingMinoOrigin);
-                _rightInterval = _iGetKeyInterval.MinoMoveInterval();
+                _sound._SEspeaker.PlayOneShot(_sound._minoTranslateSE);
+                int moveRight = 1;
+                MoveMino(0,moveRight);
+                _rightInterval = _iGetDropInterval.GetMinoMoveInterval();
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
             }
         }
@@ -173,8 +180,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         {
             if (CanMove(left))
             {
-                _dropingMinoOrigin = MoveLeft(_dropingMinoOrigin);
-                _leftInterval = _iGetKeyInterval.MinoMoveInterval();
+                _sound._SEspeaker.PlayOneShot(_sound._minoTranslateSE);
+                int moveLeft = -1;
+                MoveMino(0, moveLeft);
+                _leftInterval = _iGetDropInterval.GetMinoMoveInterval();
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
             }
         }
@@ -186,8 +195,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         {
             while (CanMove(down))
             {
-                _dropingMinoOrigin = MoveDown(_dropingMinoOrigin);
+                int moveDown = -1;
+                MoveMino(moveDown, 0);
             }
+            _sound._SEspeaker.PlayOneShot(_sound._minoLandingSE);
             _iLandingMinos.LandingMinos(LandingMinoList());
         }
     }
@@ -199,12 +210,14 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
             if (CanMove(down))
             {
                 _minoFallTime = 0f;
-                _dropingMinoOrigin = MoveDown(_dropingMinoOrigin);
-                _downInterval = _iGetKeyInterval.MinoMoveInterval();
+                int moveDown = -1;
+                MoveMino(moveDown, 0);
+                _downInterval = _iGetDropInterval.GetMinoMoveDownInterval();
                 _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
             }
             else
             {
+                _sound._SEspeaker.PlayOneShot(_sound._minoLandingSE);
                 _iLandingMinos.LandingMinos(LandingMinoList());
             }
         }
@@ -212,6 +225,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
 
     public void InputDownDecision()
     {
+        _sound._SEspeaker.PlayOneShot(_sound._minoRotateSE);
         int nextRotate = _nowRotate - ROTATE_VALUE;
 
         if (nextRotate == -180)
@@ -229,12 +243,13 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         }
         else
         {
-
+            SuperRotate(nextRotate, nextPositions);
         }
     }
 
     public void InputDownCancel()
     {
+        _sound._SEspeaker.PlayOneShot(_sound._minoRotateSE);
         int nextRotate = _nowRotate + ROTATE_VALUE;
 
         if (nextRotate == 270)
@@ -252,7 +267,7 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         }
         else
         {
-
+            SuperRotate(nextRotate, nextPositions);
         }
     }
 
@@ -340,28 +355,10 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         }
     }
 
-    private float[] MoveUp(float[] positionArray)
+    private void MoveMino(float row, float column)
     {
-        positionArray[MinoData.ROW_NUMBER]++;
-        return positionArray;
-    }
-
-    private float[] MoveDown(float[] positionArray)
-    {
-        positionArray[MinoData.ROW_NUMBER]--;
-        return positionArray;
-    }
-
-    private float[] MoveRight(float[] positionArray)
-    {
-        positionArray[MinoData.COLUMN_NUMBER]++;
-        return positionArray;
-    }
-
-    private float[] MoveLeft(float[] positionArray)
-    {
-        positionArray[MinoData.COLUMN_NUMBER]--;
-        return positionArray;
+        _dropingMinoOrigin[MinoData.ROW_NUMBER] += row;
+        _dropingMinoOrigin[MinoData.COLUMN_NUMBER] += column;
     }
 
     private void RotateReSet()
@@ -503,18 +500,686 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
         return positions;
     }
 
+    private enum E_RotatePattern
+    {
+        Other_A,
+        Other_B,
+        Other_C,
+        Other_D,
+        T_A,
+        T_B,
+        T_C,
+        T_D,
+        T_E,
+        I_A,
+        I_B,
+        I_C,
+        I_D,
+        I_E,
+        I_F,
+        I_G,
+        I_H
+    }
+
+
     private void SuperRotate(int nextRotate, float[,] nextPosition)
     {
-        int patternNumber = default;
+        E_RotatePattern rotatePattern = default;
 
-        if (nextRotate == 90)
+        // 回転パターンの判別
+
+        // Iミノ（シアン）とTミノ（パープル）以外の場合
+        if (_dropingMinoColor != MinoData.E_MinoColor.cyan && _dropingMinoColor != MinoData.E_MinoColor.purple)
         {
-
+            if (nextRotate == -90)
+            {
+                rotatePattern = E_RotatePattern.Other_A;
+            }
+            else if (nextRotate == 90)
+            {
+                rotatePattern = E_RotatePattern.Other_B;
+            }
+            else if (_nowRotate == 90)
+            {
+                rotatePattern = E_RotatePattern.Other_C;
+            }
+            else if (_nowRotate == -90)
+            {
+                rotatePattern = E_RotatePattern.Other_D;
+            }
+            else
+            {
+                Debug.LogError("想定外の回転");
+            }
         }
-        else if (nextRotate == -90)
+        // Tミノ（パープル）の場合
+        else if (_dropingMinoColor == MinoData.E_MinoColor.purple)
         {
-
+            if (nextRotate == -90)
+            {
+                rotatePattern = E_RotatePattern.T_A;
+            }
+            else if (nextRotate == 90)
+            {
+                rotatePattern = E_RotatePattern.T_B;
+            }
+            else if (_nowRotate == 90)
+            {
+                rotatePattern = E_RotatePattern.T_C;
+            }
+            else if (_nowRotate == -90 && nextRotate == 180)
+            {
+                rotatePattern = E_RotatePattern.T_D;
+            }
+            else if (_nowRotate == -90 && nextRotate == 0)
+            {
+                rotatePattern = E_RotatePattern.T_E;
+            }
+            else
+            {
+                Debug.LogError("想定外の回転");
+            }
         }
+        // Iミノ（シアン）の場合
+        else
+        {
+            if (_nowRotate == 0 && nextRotate == -90)
+            {
+                rotatePattern = E_RotatePattern.I_A;
+            }
+            else if (_nowRotate == 0 && nextRotate == 90)
+            {
+                rotatePattern = E_RotatePattern.I_B;
+            }
+            else if (_nowRotate == 90 && nextRotate == 0)
+            {
+                rotatePattern = E_RotatePattern.I_C;
+            }
+            else if (_nowRotate == 90 && nextRotate == 180)
+            {
+                rotatePattern = E_RotatePattern.I_D;
+            }
+            else if (_nowRotate == 180 && nextRotate == 90)
+            {
+                rotatePattern = E_RotatePattern.I_E;
+            }
+            else if(_nowRotate == 180 && nextRotate == -90)
+            {
+                rotatePattern = E_RotatePattern.I_F;
+            }
+            else if (_nowRotate == -90 && nextRotate == 180)
+            {
+                rotatePattern = E_RotatePattern.I_G;
+            }
+            else if (_nowRotate == -90 && nextRotate == 0)
+            {
+                rotatePattern = E_RotatePattern.I_H;
+            }
+            else
+            {
+                Debug.LogError("想定外の回転");
+            }
+        }
+
+        // 回転パターンに応じて判定
+
+        // 試行回数の上限を設定
+        int trialEnd = 4;
+
+        // パターンを網羅するため繰り返し
+        for (int trialCount = 0; trialCount <= trialEnd; trialCount++)
+        {
+            // 試行回数が上限になったか判定
+            if (trialCount == trialEnd)
+            {
+                // 回転できなかった場合
+                return;
+            }
+
+            // パターンごとに回転可能か判定
+            int[] addPosition = GetPatternValue(rotatePattern, trialCount);
+            if(CanMove(nextPosition, addPosition))
+            {
+                SetPattern(nextPosition, addPosition);
+                _nowRotate = nextRotate;
+                return;
+            }
+        }
+    }
+
+    private void SetPattern(float[,] nextPosition, int[] addPosition)
+    {
+        int moveRow = addPosition[MinoData.ROW_NUMBER];
+        int moveColumn = addPosition[MinoData.COLUMN_NUMBER];
+
+        _dropingminoPositions = nextPosition;
+
+        MoveMino(moveRow, moveColumn);
+        _iDropMinoLooksUpdata.DropMinoLooksUpdata(GetAllDropingMinoPosition());
+    }
+
+    private int[] GetPatternValue(E_RotatePattern rotatePattern, int trialCount)
+    {
+        int[] returnValue = new int[2];
+        int row = default;
+        int column = default;
+        switch (rotatePattern)
+        {
+            case E_RotatePattern.Other_A:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 1:
+                        row = 1;
+                        column = 1;
+                        break;
+
+                    case 2:
+                        row = -2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = -2;
+                        column = 1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.Other_B:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 1:
+                        row = 1;
+                        column = -1;
+                        break;
+
+                    case 2:
+                        row = -2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = -2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.Other_C:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 1:
+                        row = -1;
+                        column = 1;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = 1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.Other_D:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 1:
+                        row = -1;
+                        column = -1;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.T_A:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 1:
+                        row = 1;
+                        column = 1;
+                        break;
+
+                    case 2:
+                        row = -2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = -2;
+                        column = 1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.T_B:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 1:
+                        row = 1;
+                        column = -1;
+                        break;
+
+                    case 2:
+                        row = -2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = -2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.T_C:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 1:
+                        row = -1;
+                        column = 1;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = 1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.T_D:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 1:
+                        row = -1;
+                        column = -1;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.T_E:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -2;
+                        break;
+
+                    case 1:
+                        row = -1;
+                        column = -2;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = 0;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_A:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = 2;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = -1;
+                        break;
+
+                    case 3:
+                        row = -1;
+                        column = 2;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_B:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -2;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 2:
+                        row = -1;
+                        column = -2;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = 1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_C:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 2;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 2:
+                        row = 1;
+                        column = 2;
+                        break;
+
+                    case 3:
+                        row = -2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_D:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = 2;
+                        break;
+
+                    case 2:
+                        row = 2;
+                        column = -1;
+                        break;
+
+                    case 3:
+                        row = -1;
+                        column = 2;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_E:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = -2;
+                        break;
+
+                    case 2:
+                        row = -2;
+                        column = 1;
+                        break;
+
+                    case 3:
+                        row = 1;
+                        column = -2;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_F:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 2;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = -1;
+                        break;
+
+                    case 2:
+                        row = 1;
+                        column = 2;
+                        break;
+
+                    case 3:
+                        row = -2;
+                        column = -1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_G:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = -2;
+                        break;
+
+                    case 2:
+                        row = -1;
+                        column = -2;
+                        break;
+
+                    case 3:
+                        row = 2;
+                        column = 1;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+
+            case E_RotatePattern.I_H:
+                switch (trialCount)
+                {
+                    case 0:
+                        row = 0;
+                        column = -2;
+                        break;
+
+                    case 1:
+                        row = 0;
+                        column = 1;
+                        break;
+
+                    case 2:
+                        row = -2;
+                        column = 1;
+                        break;
+
+                    case 3:
+                        row = 1;
+                        column = -2;
+                        break;
+
+                    default:
+                        // 例外処理
+                        Debug.LogError("試行回数に異常あり");
+                        break;
+                }
+                break;
+        }
+
+        returnValue[0] = row;
+        returnValue[1] = column;
+
+        return returnValue;
     }
 
 

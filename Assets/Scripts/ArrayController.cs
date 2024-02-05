@@ -9,6 +9,8 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
     private IFStayMinoLooksUpdata _iStayMinoLooksUpdata = default;
     private IFDropStart _iDropStart = default;
     private IFGameOverManager _iGameOverManager = default;
+    private IFUIController _iUIController = default;
+    private SoundData _sound = default;
 
     private MinoData.E_MinoColor[,] _minoArray = new MinoData.E_MinoColor[ArrayData.ROW, ArrayData.COLUMN];
     private List<int> DropedRowList = new List<int>();
@@ -20,19 +22,27 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
 
     private void Awake()
     {
+        // SEÉfÅ[É^ÇÃéÊìæ
+        _sound = GameObject.FindWithTag("GameManager").GetComponent<SoundData>();
         _stateEvent = GameObject.FindWithTag("GameManager").GetComponent<IFStateEvent>();
         _iStayMinoLooksUpdata = GameObject.FindWithTag("GameManager").GetComponent<IFStayMinoLooksUpdata>();
         _iDropStart = GameObject.FindWithTag("GameManager").GetComponent<IFDropStart>();
         _iGameOverManager = GameObject.FindWithTag("GameManager").GetComponent<IFGameOverManager>();
+        _iUIController = GameObject.FindWithTag("GameManager").GetComponent<IFUIController>();
         ClearArray();
         _iStayMinoLooksUpdata.StayMinoLooksUpdata();
     }
 
     private void DeleteArray()
     {
+        if (DeleteLineList.Count > 0)
+        {
+            _sound._SEspeaker.PlayOneShot(_sound._oneLineSE);
+        }
         while (DeleteLineList.Count > 0)
         {
             DeleteLine(DeleteLineList[0]);
+            _iUIController.AddScore(100);
             DeleteLineList.RemoveAt(0);
             if (DeleteLineList.Count == 0)
             {
@@ -146,6 +156,8 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
             {
                 _stateEvent.ChengeInputState(InputState.GameOver);
                 _iGameOverManager.GameOverEvent();
+                _sound.StopBGM();
+                _sound._SEspeaker.PlayOneShot(_sound._gameOverSE);
                 return;
             }
         }

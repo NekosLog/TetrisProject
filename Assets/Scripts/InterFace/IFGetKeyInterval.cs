@@ -1,4 +1,0 @@
-interface IFGetKeyInterval
-{
-    float MinoMoveInterval();
-}

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
 {
+    // SEデータ
+    private SoundData _sound = default;
     private IFStateEvent _iStateEvent = default;
     private IFTitleMenuUI _iTitleMenuUI = default;
     private IFDropStart _iDropStart = default;
@@ -11,6 +13,8 @@ public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
 
     private void Awake()
     {
+        // SEデータの取得
+        _sound = GameObject.FindWithTag("GameManager").GetComponent<SoundData>();
         _iStateEvent = GameObject.FindWithTag("GameManager").GetComponent<IFStateEvent>();
         _iTitleMenuUI = GameObject.FindWithTag("GameManager").GetComponent<IFTitleMenuUI>();
         _iDropStart = GameObject.FindWithTag("GameManager").GetComponent<IFDropStart>();
@@ -98,6 +102,7 @@ public class TitleMenuManager : MonoBehaviour, IFInputTitleMenu
 
     private void DropStart()
     {
+        _sound.StartInGameBGM();
         _iDropStart.DropStart();
     }
 }

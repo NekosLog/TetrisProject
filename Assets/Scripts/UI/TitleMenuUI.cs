@@ -17,12 +17,12 @@ public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
     private GameObject _arrow_Exit = default;
 
     // SEデータ
-    private SEData _sound = default;
+    private SoundData _sound = default;
 
     private void Awake()
     {
         // SEデータの取得
-        _sound = GameObject.FindWithTag("GameManager").GetComponent<SEData>();
+        _sound = GameObject.FindWithTag("GameManager").GetComponent<SoundData>();
     }
 
     public void ChengeUI(E_MenuItem index)
@@ -33,6 +33,7 @@ public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
                 _arrow_GameStart.SetActive(true);
                 //_arrow_OpenOption.enabled = false;
                 _arrow_Exit.SetActive(false);
+                _sound._SEspeaker.PlayOneShot(_sound._menuChangeSE);
                 break;
             //case E_MenuItem.OpenOption:
             //    _arrow_GameStart.enabled = false;
@@ -43,6 +44,7 @@ public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
                 _arrow_GameStart.SetActive(false);
                 //_arrow_OpenOption.enabled = false;
                 _arrow_Exit.SetActive(true);
+                _sound._SEspeaker.PlayOneShot(_sound._menuChangeSE);
                 break;
         }
     }
@@ -54,7 +56,7 @@ public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
         switch (index)
         {
             case E_MenuItem.GameStart:
-                _sound._speaker.PlayOneShot(_sound._menuExecutionSE);
+                _sound._SEspeaker.PlayOneShot(_sound._menuExecutionSE);
                 _arrow_GameStart.transform.position += Vector3.right * moveValue;
                 Invoke("CloseMenu", 1f);
                 break;
@@ -64,7 +66,7 @@ public class TitleMenuUI : MonoBehaviour, IFTitleMenuUI
             //    break;
 
             case E_MenuItem.Exit:
-                _sound._speaker.PlayOneShot(_sound._menuExecutionSE);
+                _sound._SEspeaker.PlayOneShot(_sound._menuExecutionSE);
                 _arrow_Exit.transform.position += Vector3.right * moveValue;
                 break;
         }
