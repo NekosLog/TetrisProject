@@ -3,7 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
 {
-    static Vector2[] a = { new Vector2 { }, new Vector2 { } };
+    [SerializeField, Tooltip("Managerをアタッチ")]
+    private InGameUIController _inGameUIController = default;
 
     private MinoData.E_MinoColor _nextMino = MinoData.E_MinoColor.empty;
 
@@ -59,6 +60,7 @@ public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
             returnMinoColor = GetDropMino();
         }
         _holdingMino = dropingMino;
+        _inGameUIController.ChengeHold(_holdingMino);
         return returnMinoColor;
     }
 
@@ -67,6 +69,10 @@ public class DropMinoData : MonoBehaviour, IFGetDropMinoData, IFDropMino
         _nextMino = _secondMino;
         _secondMino = _thirdMino;
         _thirdMino = (MinoData.E_MinoColor)GetNextMinoNumber();
+
+        _inGameUIController.ChengeNext1(_nextMino);
+        _inGameUIController.ChengeNext2(_secondMino);
+        _inGameUIController.ChengeNext3(_thirdMino);
     }
 
     private int GetNextMinoNumber()

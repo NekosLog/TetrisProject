@@ -151,11 +151,6 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
                 }
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            DropStart();
-        }
     }
 
     #region InputŠÖŒW
