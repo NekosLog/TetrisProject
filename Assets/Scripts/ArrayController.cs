@@ -147,6 +147,7 @@ public class ArrayController : MonoBehaviour, IFLandingMinos, IFGetMinoArray
         CheckArray();
         _iStayMinoLooksUpdata.StayMinoLooksUpdata();
         _iDropStart.ReFresh();
+        _iDropStart.ReSetCanHold();
 
         int OverRow = 20;
 

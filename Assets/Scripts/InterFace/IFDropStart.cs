@@ -8,4 +8,6 @@ using UnityEngine;
 public interface IFDropStart {
     void DropStart();
     void ReFresh();
+
+    void ReSetCanHold();
 }

@@ -15,14 +15,15 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
     private float[] _dropingMinoOrigin = new float[2];
     private float[,] _dropingminoPositions = new float[4, 2];
     private List<MinoData.minoState> _landingMinoList;
-    private float _minoFallInterval = 1f;
-    private float _minoFallTime = 0f;
 
     private int _nowRotate = default;
 
+    private float _minoFallTime = 0f;
     private float _rightInterval = default;
     private float _leftInterval = default;
     private float _downInterval = default;
+
+    private bool _canHold = true;
 
     private enum E_RotationVector { right = 0, left = 1 }
     private E_RotationVector _rotationRight = E_RotationVector.right;
@@ -268,10 +269,11 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
 
     public void InputDownHold()
     {
-        if(_dropingMinoColor != MinoData.E_MinoColor.empty)
+        if(_dropingMinoColor != MinoData.E_MinoColor.empty && _canHold)
         {
             _dropingMinoColor = _iDropMino.ChangeHold(_dropingMinoColor);
             DropStart();
+            _canHold = false;
         }
     }
 
@@ -493,6 +495,11 @@ public class DropingMino : MonoBehaviour, IFInputMainGame, IFDropStart
             }
         }
         return positions;
+    }
+
+    public void ReSetCanHold()
+    {
+        _canHold = true;
     }
 
     private enum E_RotatePattern
